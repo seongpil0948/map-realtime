@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import mapImgData from './mock/map'
+import { ref } from 'vue';
 import resources from './mock/resources';
 import { useWindowSize } from '@vueuse/core'
 import { ImgDict, Locations, PStageConfig } from './types';
 import { useKonv } from './composable';
+import { getMap } from './mock/api';
+import maps from './mock/maps'
+// import mapImgData from './mock/map'
 
 const { width, height } = useWindowSize()
 const configKonva: PStageConfig = {
@@ -18,9 +20,10 @@ const mapSize = {
   x: 0,
   y: 0
 }
-
+const encodedMap = ref<string>(maps[0].id)
 const { loadImage, loadImages } = useKonv()
-const image = loadImage({ src: mapImgData, width: mapSize.width, height: mapSize.height })
+// const image = loadImage({ src: mapImgData, width: mapSize.width, height: mapSize.height })
+const image = ref<any>(null)
 const mapRef = ref<any>(null)
 function init(images: ImgDict) {
   const mapCenter = {
@@ -43,17 +46,31 @@ function init(images: ImgDict) {
   locations.value = arr
 }
 
+const changeEncodedMap = (targetValue: string) => {
+  const targetEncodedMapCode = getMap(targetValue).encoded_map
+  if (targetEncodedMapCode) {
+    image.value = loadImage({ src: targetEncodedMapCode, width: mapSize.width, height: mapSize.height })
+  }
+}
+
+changeEncodedMap(encodedMap.value)
 loadImages(init);
+
 
 </script>
 
 <template>
+  <div>
+    <select v-model="encodedMap" name="encodedMap" @change="changeEncodedMap(encodedMap)">
+      <option v-for="map in maps" :key="map._id" :value="map.id">{{ map.name }}</option>
+    </select>
+  </div>
   <v-stage :config="configKonva">
     <v-layer>
       <v-image ref="mapRef" :config="{ image, x: mapSize.x, y: mapSize.y }" />
       <!-- <v-image ref="mapRef" :config="{ image }" /> -->
       <!-- <v-circle :config="configCircle"></v-circle> -->
-      <v-image v-for="location in locations" :key="(location.x + location.y) * location.theta"
+      <v-image v-for="   location    in    locations   " :key="(location.x + location.y) * location.theta"
         :config="{ image: location.image, x: location.x, y: location.y }"></v-image>
     </v-layer>
   </v-stage>
