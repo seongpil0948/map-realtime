@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="32" height="32" viewBox="0 0 32 32">
+    <defs>
+        <radialGradient id="pwuld5roka" cx="-2.505" cy="-.716" r="5.431" gradientUnits="objectBoundingBox">
+            <stop offset="0" stop-color="#009fe3"/>
+            <stop offset=".361" stop-color="#009ce4"/>
+            <stop offset=".578" stop-color="#0194e8"/>
+            <stop offset=".756" stop-color="#0385ee"/>
+            <stop offset=".914" stop-color="#0671f8"/>
+            <stop offset="1" stop-color="#0863ff"/>
+        </radialGradient>
+        <radialGradient id="wyj6z83x8b" cx="-1.124" cy="-3.416" r="5.431" xlink:href="#pwuld5roka"/>
+        <radialGradient id="buedhg7rvc" cx="-3.848" cy="-4.75" r="5.431" xlink:href="#pwuld5roka"/>
+        <radialGradient id="1vtivhiujd" cx="-5.182" cy="-2.05" r="5.431" xlink:href="#pwuld5roka"/>
+        <radialGradient id="h32bhcyjpe" cx="-.04" cy="-2.05" r="5.431" gradientTransform="matrix(.3 0 0 1 .35 0)" xlink:href="#pwuld5roka"/>
+        <radialGradient id="1ur0greeif" cx="-1.154" cy="-3.416" r="5.431" gradientTransform="matrix(.3 0 0 1 .35 0)" xlink:href="#pwuld5roka"/>
+        <radialGradient id="wddmdptlig" cx="-1.025" cy="3.465" r="5.431" gradientTransform="matrix(0 -1 .3 0 .985 -4.973)" xlink:href="#pwuld5roka"/>
+        <radialGradient id="1iwv1l2z0h" cx=".075" cy="4.848" r="5.431" gradientTransform="matrix(0 -1 .3 0 -.53 -1.721)" xlink:href="#pwuld5roka"/>
+    </defs>
+    <rect width="32" height="32" fill="#fff" rx="16"/>
+    <g>
+        <circle cx="1.846" cy="1.846" r="1.846" fill="url(#pwuld5roka)" transform="translate(11.747 6.646)"/>
+        <circle cx="1.846" cy="1.846" r="1.846" fill="url(#wyj6z83x8b)" transform="translate(6.648 16.615)"/>
+        <circle cx="1.846" cy="1.846" r="1.846" fill="url(#buedhg7rvc)" transform="translate(16.707 21.538)"/>
+        <circle cx="1.846" cy="1.846" r="1.846" fill="url(#1vtivhiujd)" transform="translate(21.63 11.569)"/>
+        <rect width="12.308" height="3.692" fill="url(#h32bhcyjpe)" rx="1.846" transform="translate(2.985 11.569)"/>
+        <rect width="12.308" height="3.692" fill="url(#1ur0greeif)" rx="1.846" transform="translate(16.707 16.615)"/>
+        <rect width="12.308" height="3.692" fill="url(#wddmdptlig)" rx="1.846" transform="rotate(90 -.661 15.954)"/>
+        <rect width="12.308" height="3.692" fill="url(#1iwv1l2z0h)" rx="1.846" transform="rotate(90 8.661 11.738)"/>
+    </g>
+</svg>
