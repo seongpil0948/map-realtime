@@ -3,9 +3,10 @@ import { onBeforeMount, onBeforeUnmount, onMounted, ref, watchEffect } from 'vue
 import resources from './mock/resources';
 import { useWindowSize } from '@vueuse/core'
 import { ImgDict, Locations, PStageConfig } from './types';
-import { useKonv, useMsgQueue } from './composable';
+import { useKonv } from './composable/konv';
 import { getMap } from './mock/api';
 import maps from './mock/maps'
+import { useMqtt } from './composable/mqtt';
 // import mapImgData from './mock/map'
 // import * as Paho from "paho-mqtt"
 
@@ -57,6 +58,11 @@ const changeEncodedMap = (targetValue: string) => {
 changeEncodedMap(encodedMap.value)
 loadImages(init);
 
+// use Mqtt
+const { getClient } = useMqtt()
+const client = getClient()
+
+
 // const { msgQueue, getClient } = useMsgQueue()
 // const client = getClient('spspsps')
 // client.connect()
@@ -70,53 +76,8 @@ loadImages(init);
 // onBeforeUnmount(() => {
 //   client.dispose()
 // })
-import mqtt from 'mqtt';
 
 
-onBeforeMount(() => {
-  const connected = ref(false)
-  const message = ref('')
-
-  const option = {
-    username: 'admin',
-    password: '0525'
-  }
-
-  const client = mqtt.connect("ws://192.168.0.101:15675/ws", option);
-
-  client.on('connect', () => {
-    connected.value = true;
-    console.log('MQTT 브로커에 연결되었습니다.');
-
-    // 구독할 토픽 설정
-    const topic = 'hello';
-
-    // 토픽 구독
-    client.subscribe(topic, (err, granted) => {
-      if (err) {
-        console.error('토픽 구독 실패:', err);
-        return;
-      }
-
-      console.log('토픽 `' + topic + '` 구독 성공.');
-    });
-  });
-
-  client.on('error', (err) => {
-    console.error("MQTT 연결 오류", err)
-  })
-
-  client.on('message', (topic, msg) => {
-    message.value = msg.toString();
-    console.log('토픽 `' + topic + '`에서 메시지 수신:', message.value.toString());
-  });
-
-  // 연결 종료 시 이벤트 처리
-  client.on('end', () => {
-    connected.value = false;
-    console.log('MQTT 브로커 연결 종료.');
-  });
-})
 
 
 </script>
