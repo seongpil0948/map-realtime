@@ -1,7 +1,7 @@
 import type { Plugin } from 'vue'
 import type { Props } from './props'
 import { injectGlobalConfig } from './config'
-import Component from './component'
+import Component from './component.vue'
 
 export type { Props } from './props'
 export type { Events } from './events'
