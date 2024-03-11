@@ -12,7 +12,7 @@ export const DEFAULT_CONFIG: Readonly<Partial<ConfigProps>> = Object.freeze({
   // extensions: [basicSetup],
 })
 
-const CONFIG_SYMBOL = Symbol('vue-codemirror-global-config')
+const CONFIG_SYMBOL = Symbol('map-real-global-config')
 export const injectGlobalConfig = (app: App, config?: ConfigProps) => {
   app.provide(CONFIG_SYMBOL, config)
 }
