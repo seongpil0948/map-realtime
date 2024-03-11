@@ -19,6 +19,9 @@ dependencies:
     version: 3.0.2(konva@9.3.6)
 
 devDependencies:
+  '@types/paho-mqtt':
+    specifier: ^1.0.10
+    version: 1.0.10
   '@vitejs/plugin-vue':
     specifier: ^5.0.4
     version: 5.0.4(vite@5.1.5)(vue@3.4.21)
@@ -373,6 +376,10 @@ packages:
 
   /@types/estree@1.0.5:
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
+    dev: true
+
+  /@types/paho-mqtt@1.0.10:
+    resolution: {integrity: sha512-xOEii1m7jw7mIKjufDkolpz7VlyqptUmm/YFPtLJCybrPCuLhN+WYgNpulQ/CXo7wtEW7x4uGon2v89+6g/pcA==}
     dev: true
 
   /@types/web-bluetooth@0.0.20:

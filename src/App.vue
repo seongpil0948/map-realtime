@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onBeforeMount, onBeforeUnmount, ref, watchEffect } from 'vue';
 import resources from './mock/resources';
 import { useWindowSize } from '@vueuse/core'
 import { ImgDict, Locations, PStageConfig } from './types';
-import { useKonv } from './composable';
+import { useKonv, useMsgQueue } from './composable';
 import { getMap } from './mock/api';
 import maps from './mock/maps'
 // import mapImgData from './mock/map'
+// import * as Paho from "paho-mqtt"
 
 const { width, height } = useWindowSize()
 const configKonva: PStageConfig = {
@@ -55,6 +56,20 @@ const changeEncodedMap = (targetValue: string) => {
 
 changeEncodedMap(encodedMap.value)
 loadImages(init);
+
+const { msgQueue, getClient } = useMsgQueue()
+const client = getClient('spspsps')
+client.connect()
+
+watchEffect(() => {
+  if (msgQueue.value.length > 0) {
+    console.log(msgQueue.value)
+  }
+})
+
+onBeforeUnmount(() => {
+  client.dispose()
+})
 
 
 </script>

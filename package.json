@@ -15,6 +15,7 @@
     "vue-konva": "^3.0.2"
   },
   "devDependencies": {
+    "@types/paho-mqtt": "^1.0.10",
     "@vitejs/plugin-vue": "^5.0.4",
     "typescript": "^5.4.2",
     "vite": "^5.1.5",
