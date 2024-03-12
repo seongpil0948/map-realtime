@@ -32,6 +32,11 @@ const stageRef = ref<any>(null)
 
 const { getClient } = useMqtt({
   clientId: 'client-' + Math.random().toString(16).substring(2, 8),
+  topic: 'hello',
+  host: '192.168.0.101',
+  port: 15675,
+  username: 'admin',
+  password: '0525',
 })
 const client = getClient()
 
@@ -56,13 +61,6 @@ onMounted(() => {
 onBeforeUnmount(() => {
   client.dispose()
 })
-
-
-
-
-
-
-// <<< temp <<<
 
 
 </script>
