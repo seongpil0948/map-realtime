@@ -10,6 +10,7 @@ import { extractKonva } from './konva';
 import { Props } from './props';
 import { DEFAULT_CONFIG } from './config';
 import { MapEvent } from './events';
+import { useMqtt } from '../../composable/mqtt';
 
 const props = withDefaults(defineProps<Props>(), {
   ...DEFAULT_CONFIG,
@@ -69,9 +70,10 @@ const changeEncodedMap = (targetValue: string) => {
 changeEncodedMap(encodedMap.value)
 loadImages(init);
 
-const { getClient } = useMsgQueue()
-const client = getClient('spspsps')
-client.connect()
+const { getClient } = useMqtt({
+  clientId: 'client-' + Math.random().toString(16).substring(2, 8),
+})
+const client = getClient()
 
 onMounted(() => {
   console.info(extractKonva(stageRef))
