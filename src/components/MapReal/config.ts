@@ -2,6 +2,7 @@ import type { App, CSSProperties } from 'vue'
 import { inject } from 'vue'
 import type { Props } from './props'
 import { PStageConfig, WidthHeightRef } from './types'
+import { ConfigAMQP } from '../../composable/types'
 
 export const DEFAULT_CONFIG = Object.freeze<Props>({
   scale: 1.5,
@@ -40,3 +41,12 @@ export const getMapSize = (windowSize: WidthHeightRef) => {
     y: 0
   }
 }
+
+export const getMqttConfig = (topic: string = 'hello'): ConfigAMQP => ({
+  clientId: 'client-' + Math.random().toString(16).substring(2, 8),
+  topic,
+  host: '192.168.0.101',
+  port: 15675,
+  username: 'admin',
+  password: '0525',
+})

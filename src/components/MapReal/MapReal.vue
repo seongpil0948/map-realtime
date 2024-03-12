@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue';
-import { PStageConfig } from './types';
-
+import { onBeforeMount, onBeforeUnmount, onMounted, ref } from 'vue';
+import { PStageConfig, Resources } from './types';
+import mockResource from '../../mock/resources'
 import maps from '../../mock/maps'
 import { extractKonva } from './konva';
 import { Props } from './props';
-import { DEFAULT_CONFIG, getStageConfig } from './config';
+import { DEFAULT_CONFIG, getMqttConfig, getStageConfig } from './config';
 import { MapEvent } from './events';
 import { useMqtt } from '../../composable/mqtt';
 import useMap from './composable/map';
@@ -21,24 +21,30 @@ const emit = defineEmits<MapEvent>()
 
 const {
   mapImgRef,
-  locations,
+  resources,
   changeEncodedMap,
   encodedMap,
   windowSize,
-  mapSize
-} = useMap()
+  mapSize,
+  setResources
+} = useMap({
+  getInitialResources() {
+    return Promise.resolve<any>(mockResource)
+  },
+})
 const configKonva: PStageConfig = getStageConfig(props, windowSize)
 const stageRef = ref<any>(null)
 
-const { getClient } = useMqtt({
-  clientId: 'client-' + Math.random().toString(16).substring(2, 8),
-  topic: 'hello',
-  host: '192.168.0.101',
-  port: 15675,
-  username: 'admin',
-  password: '0525',
+const configResource = getMqttConfig()
+const { ignite } = useMqtt<Resources>({
+  config: configResource,
+  onMessage(message) {
+    console.log('토픽 `' + configResource.topic + '`에서 메시지 수신:', message);
+    setResources(message)
+  },
 })
-const client = getClient()
+const { dispose } = ignite()
+
 
 const {
   handleMouseMove,
@@ -54,12 +60,9 @@ const {
   handleDrag
 } = useDrag()
 
-onMounted(() => {
-  console.info(extractKonva(stageRef))
-})
 
 onBeforeUnmount(() => {
-  client.dispose()
+  dispose()
 })
 
 
@@ -76,8 +79,10 @@ onBeforeUnmount(() => {
     <v-layer>
       <v-image :config="{ image: mapImgRef, x: mapSize.x, y: mapSize.y, draggable: false }" @mousemove="handleMouseMove"
         @mouseout="handleMouseOut" @wheel="handleWheel" />
-      <v-image v-for="location in locations" :key="(location.x + location.y) * location.theta"
-        :config="{ image: location.image, x: location.x, y: location.y }"></v-image>
+      <v-image v-for="location in resources?.Location" :key="location.id"
+        :config="{ image: location.image, x: location.pose.x, y: location.pose.y, rotation: location.pose.theta }" />
+      <v-image v-for="location in resources?.Worker" :key="location.id"
+        :config="{ image: location.image, x: location.pose.x, y: location.pose.y, rotation: location.pose.theta }" />
 
       <v-text ref="text" :config="{
       x: 10,

@@ -1,15 +1,19 @@
 import mqtt from 'mqtt';
-import { PropsAMQP } from './types';
+import { ConfigAMQP } from './types';
 import { ref, shallowRef } from 'vue';
 
+interface Props<Message = Record<string, any>> {
+  config: ConfigAMQP
+  onMessage: (message: Message) => void
+}
 
-export function useMqtt<Message = Record<string, any>>(props: PropsAMQP) {
-  const { host, port, topic, ...option } = props;
+export function useMqtt<Message = Record<string, any>>(p: Props<Message>) {
+  const { config, onMessage } = p;
+  const { host, port, topic, ...option } = config;
   const connected = ref(false)
-  const message = shallowRef<Message>({} as Message)
 
 
-  const getClient = () => {
+  const ignite = () => {
     const client = mqtt.connect(`ws://${host}:${port}/ws`, option);
 
     client.on('connect', () => {
@@ -31,8 +35,11 @@ export function useMqtt<Message = Record<string, any>>(props: PropsAMQP) {
     })
 
     client.on('message', (topic, msg) => {
-      message.value = JSON.parse(msg.toString());
-      console.log('토픽 `' + topic + '`에서 메시지 수신:', message.value);
+      try {
+        onMessage(JSON.parse(msg.toString()));
+      } catch (e) {
+        console.error(topic, '토픽 메시지 파싱 오류:', e)
+      }
     });
 
     // 연결 종료 시 이벤트 처리
@@ -53,7 +60,7 @@ export function useMqtt<Message = Record<string, any>>(props: PropsAMQP) {
   }
 
   return {
-    getClient
+    ignite
   }
 
 }

@@ -3,6 +3,7 @@ import { useWindowSize } from '@vueuse/core'
 import type { NodeConfig, Node } from 'konva/lib/Node'
 export type { NodeConfig, Node }
 import type { StageConfig, Stage } from 'konva/lib/Stage'
+import { ImgKeys } from './composable/image'
 type PStageConfig = Omit<StageConfig, 'container'>
 export type { StageConfig, Stage, PStageConfig }
 export type { Image, ImageConfig } from 'konva/lib/shapes/Image'
@@ -15,14 +16,18 @@ export type Locations = {
   theta: number
   label: string
 }[]
-export type ImgDict = { [src: string]: HTMLImageElement }
-export type ImgSrcDict = { [label: string]: string }
+export type ImgDict = Record<ImgKeys, HTMLImageElement>
+export type ImgSrcDict = Record<ImgKeys, string>
 export type Resources = {
   Location: ResourcesLocation[],
   Zone: ResourcesZone[],
   TeleporterGate: ResourcesTeleporterGate[],
   Marker: ResourcesMarker[],
-  AutodoorExt: ResourcesAutodoorExt[]
+  AutodoorExt: ResourcesAutodoorExt[],
+  Worker: any[]
+}
+export interface CleanResources extends Resources {
+  Location: LocationClean[]
 }
 
 export type Pose = {
@@ -44,6 +49,9 @@ export type ResourcesLocation = {
   updated_at: string,
   id: string
 }
+export type LocationClean = {
+  image?: HTMLImageElement,
+} & ResourcesLocation
 
 
 export type WorkerParams = {

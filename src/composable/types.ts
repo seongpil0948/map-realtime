@@ -1,5 +1,5 @@
 import mqtt from "mqtt"
 
-export type PropsAMQP = mqtt.IClientOptions & {
+export type ConfigAMQP = mqtt.IClientOptions & {
   topic: string
 }

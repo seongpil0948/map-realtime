@@ -1,6 +1,4 @@
-import { Ref } from "vue"
 import { Stage, Node } from "./types"
-import Konva from "konva"
 
 
 export function extractKonva(konvaCompRef: any): {
@@ -17,4 +15,9 @@ export function flipY(node: Node) {
   node.to({
     scaleY: -node.scaleY(),
   })
+}
+
+export function thetaToDegree(theta: number) {
+  const result = (theta * 180) / Math.PI
+  return Math.ceil(result)
 }
