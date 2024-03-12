@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeMount, onBeforeUnmount, onMounted, ref, watchEffect } from 'vue';
+import { onBeforeMount, onBeforeUnmount, onMounted, ref } from 'vue';
 import { useWindowSize } from '@vueuse/core'
 import { ImgDict, Locations, PStageConfig } from './types';
 import { useKonv, useMsgQueue } from './composable'
@@ -7,20 +7,24 @@ import resources from '../../mock/resources';
 import { getMap } from '../../mock/api';
 import maps from '../../mock/maps'
 import { extractKonva } from './konva';
-// import mapImgData from './mock/map'
-// import * as Paho from "paho-mqtt"
+import { Props } from './props';
+import { DEFAULT_CONFIG } from './config';
+import { MapEvent } from './events';
 
-const emit = defineEmits<{
-  (e: 'update:mouse', value: {
-    x: number
-    y: number
-  }): void
-}>()
+const props = withDefaults(defineProps<Props>(), {
+  ...DEFAULT_CONFIG,
+  canvasStyle: () => DEFAULT_CONFIG.canvasStyle,
+})
 
+
+const emit = defineEmits<MapEvent>()
 const { width, height } = useWindowSize()
 const configKonva: PStageConfig = {
   width: width.value,
-  height: height.value
+  height: height.value,
+  draggable: true,
+  scaleX: props.scale,
+  scaleY: props.scale
 }
 const locations = ref<Locations>([])
 const mapSize = {
@@ -131,6 +135,16 @@ const handleWheel = (event: any) => {
   };
   stage.position(newPos);
 }
+
+const handleDragStart = (event: any) => {
+  console.log('DragStart', event)
+}
+const handleDragEnd = (event: any) => {
+  console.log('DragEnd', event)
+}
+const handleDrag = (event: any) => {
+  console.log('Drag', event)
+}
 // <<< temp <<<
 
 
@@ -142,9 +156,10 @@ const handleWheel = (event: any) => {
       <option v-for="map in maps" :key="map._id" :value="map.id">{{ map.name }}</option>
     </select>
   </div>
-  <v-stage ref="stageRef" :config="configKonva">
+  <v-stage ref="stageRef" :config="configKonva" @dragstart="handleDragStart" @dragend="handleDragEnd"
+    @drag="handleDrag">
     <v-layer>
-      <v-image :config="{ image: mapImgRef, x: mapSize.x, y: mapSize.y }" @mousemove="handleMouseMove"
+      <v-image :config="{ image: mapImgRef, x: mapSize.x, y: mapSize.y, draggable: false }" @mousemove="handleMouseMove"
         @mouseout="handleMouseOut" @wheel="handleWheel" />
       <v-image v-for="location in locations" :key="(location.x + location.y) * location.theta"
         :config="{ image: location.image, x: location.x, y: location.y }"></v-image>

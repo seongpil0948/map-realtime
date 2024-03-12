@@ -1,37 +1,8 @@
-import type { CSSProperties, ExtractPropTypes, PropType } from 'vue'
+import type { CSSProperties } from 'vue'
 
-const NonDefaultBooleanType = {
-  // type: Boolean,
-  // default: undefined,
+
+export interface Props {
+  canvasStyle: CSSProperties
+  scale: number
 }
-
-export const configProps = {
-  // autofocus: NonDefaultBooleanType,
-  // disabled: NonDefaultBooleanType,
-  // indentWithTab: NonDefaultBooleanType,
-  // tabSize: Number,
-  // placeholder: String,
-  // style: Object as PropType<CSSProperties>,
-  // autoDestroy: NonDefaultBooleanType,
-  // phrases: Object as PropType<Record<string, string>>,
-  // // codemirror options
-  // root: Object as PropType<ShadowRoot | Document>,
-  // extensions: Array as PropType<EditorStateConfig['extensions']>,
-  // selection: Object as PropType<EditorStateConfig['selection']>,
-}
-
-export const modelValueProp = {
-  // modelValue: {
-  //   type: String,
-  //   default: '',
-  // },
-}
-
-export const props = {
-  ...configProps,
-  ...modelValueProp,
-}
-
-export type ConfigProps = ExtractPropTypes<typeof configProps>
-export type Props = ExtractPropTypes<typeof props>
 export type PropKey = keyof Props
