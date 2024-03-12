@@ -1,58 +1,7 @@
-import { onBeforeUnmount, shallowRef, watchEffect } from "vue";
-import { ImgDict, ImgSrcDict } from "./types";
-
-export function useKonv() {
-
-  const images = shallowRef<ImgDict>({})
-
-  const loadImage = (props: {
-    src: string,
-    width: number,
-    height: number,
-  }): HTMLImageElement => {
-    const image = new Image()
-    image.src = props.src
-    image.width = props.width
-    image.height = props.height
-    return image
-  }
-
-  const loadImages = (callback: (images: ImgDict) => void) => {
-    const sources: ImgSrcDict = STATIC_IMG_DICT;
-    var assetDir = '/';
-    var loadedImages = 0;
-    var numImages = 0;
-    for (var label in sources) {
-      numImages++;
-    }
-    for (var label in sources) {
-      images.value[label] = new Image();
-      images.value[label].onload = function () {
-        if (++loadedImages >= numImages) {
-          callback(images.value as ImgDict);
-        }
-      };
-      images.value[label].src = assetDir + sources[label];
-    }
-  }
-
-
-  return {
-    images,
-    loadImage,
-    loadImages,
-
-  }
-}
-
-
-const STATIC_IMG_DICT = {
-  "marker": 'map__full--e53.svg',
-};
-// type TStaticImageDict = typeof STATIC_IMG_DICT;
+import { shallowRef } from "vue";
 
 type TMessage = any
-export function useMsgQueue() {
+export function useMqttws31() {
   const wsbroker = '192.168.0.101';  //mqtt websocket enabled broker
   const wsport = 15675; // port for above
   const topic = "hello";
@@ -124,14 +73,6 @@ export function useMsgQueue() {
       console.log("CONNECT TO " + wsbroker + ":" + wsport);
       client.connect(options);
     }
-
-    watchEffect(() => {
-      if (msgQueue.value.length > 0) {
-        console.log(msgQueue.value)
-      }
-    })
-
-
     return {
       client,
       send,
@@ -147,3 +88,4 @@ export function useMsgQueue() {
     getClient
   }
 }
+

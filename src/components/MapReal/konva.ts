@@ -1,4 +1,6 @@
+import { Ref } from "vue"
 import { Stage, Node } from "./types"
+import Konva from "konva"
 
 
 export function extractKonva(konvaCompRef: any): {

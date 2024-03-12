@@ -1,11 +1,13 @@
 export type { LayerConfig, Layer } from 'konva/lib/Layer'
+import { useWindowSize } from '@vueuse/core'
 import type { NodeConfig, Node } from 'konva/lib/Node'
 export type { NodeConfig, Node }
 import type { StageConfig, Stage } from 'konva/lib/Stage'
 type PStageConfig = Omit<StageConfig, 'container'>
 export type { StageConfig, Stage, PStageConfig }
 export type { Image, ImageConfig } from 'konva/lib/shapes/Image'
-
+export type Vector2D = { x: number; y: number }
+export type WidthHeightRef = ReturnType<typeof useWindowSize>
 export type Locations = {
   image: HTMLImageElement,
   x: number,
@@ -60,95 +62,76 @@ export type ResourcesZone = {
   name: string,
   type: string,
   map: string,
-  worker_params?: WorkerParams, 
+  worker_params?: WorkerParams,
   created_at: string,
   updated_at: string,
-  polygon: {x: number, y: number}[],
+  polygon: { x: number, y: number }[],
   id: string
 }
 
 export type ResourcesTeleporterGate = {
- _id: string,
- networks: any[],
- resource_waitings: {
   _id: string,
-  map: string,
-  pose: Pose,
-  type: string,
-  name: string,
-  description: string,
+  networks: any[],
+  resource_waitings: {
+    _id: string,
+    map: string,
+    pose: Pose,
+    type: string,
+    name: string,
+    description: string,
+    resource_active: boolean,
+    resource_type: string,
+    created_at: string,
+    updated_at: string,
+    id: string
+  }[],
+  description?: string,
   resource_active: boolean,
   resource_type: string,
-  created_at: string,
-  updated_at: string,
-  id: string 
- }[],
- description?: string,
- resource_active: boolean,
- resource_type: string,
- name: string,
- map: string,
- area: {x: number, y: number, theta: number, width: number, height: number},
- aligns: {
-  entries: Pose[],
-  exits: Pose[]
- },
- properties: {
-  floor_id: number,
-  floor_name: string
- },
- parameters: {
-  marker_id: number,
-  marker_pose: Pose
- },
- created_at: string,
- updated_at: string,
- teleporter: {
-  _id: string,
-  type: string,
+  name: string,
+  map: string,
+  area: { x: number, y: number, theta: number, width: number, height: number },
+  aligns: {
+    entries: Pose[],
+    exits: Pose[]
+  },
   properties: {
-    ip: string,
-    port: number,
-    vendor: string,
-    elsa_id: number,
-    client_id: string,
-    client_pw: string,
-    group_id: number,
-    internal_id: number,
-    max_floor: number,
-    min_floor: number
+    floor_id: number,
+    floor_name: string
   },
-  site?: any,
-  name: string,
-  description?: string, 
-  resource_active: boolean,
-  resource_type: string,
+  parameters: {
+    marker_id: number,
+    marker_pose: Pose
+  },
   created_at: string,
   updated_at: string,
-  standing_offset: any[],
-  id: string
- },
- evacuation: string,
- waiting_after_cancel:{
-  _id: string,
-  description: string,
-  resource_active: boolean,
-  resource_type: string,
-  pose: Pose,
-  map: string,
-  name: string,
-  type: string,
-  created_at: string,
-  updated_at: string,
-  id: string
- },
- doors: {
-  pose: {
-    x: number,
-    y: number
+  teleporter: {
+    _id: string,
+    type: string,
+    properties: {
+      ip: string,
+      port: number,
+      vendor: string,
+      elsa_id: number,
+      client_id: string,
+      client_pw: string,
+      group_id: number,
+      internal_id: number,
+      max_floor: number,
+      min_floor: number
+    },
+    site?: any,
+    name: string,
+    description?: string,
+    resource_active: boolean,
+    resource_type: string,
+    created_at: string,
+    updated_at: string,
+    standing_offset: any[],
+    id: string
   },
-  door_no: number,
-  evacuation: {
+  evacuation: string,
+  waiting_after_cancel: {
     _id: string,
     description: string,
     resource_active: boolean,
@@ -159,10 +142,29 @@ export type ResourcesTeleporterGate = {
     type: string,
     created_at: string,
     updated_at: string,
-    id: string,
-  }
- }[],
- id: string
+    id: string
+  },
+  doors: {
+    pose: {
+      x: number,
+      y: number
+    },
+    door_no: number,
+    evacuation: {
+      _id: string,
+      description: string,
+      resource_active: boolean,
+      resource_type: string,
+      pose: Pose,
+      map: string,
+      name: string,
+      type: string,
+      created_at: string,
+      updated_at: string,
+      id: string,
+    }
+  }[],
+  id: string
 }
 
 export type ResourcesMarker = {
@@ -223,7 +225,7 @@ export type ResourcesAutodoorExt = {
   },
   _id: string,
   map: string,
-  polygon: {x: number, y: number}[],
+  polygon: { x: number, y: number }[],
   aligns: {
     pose: {
       x: number,
@@ -232,7 +234,7 @@ export type ResourcesAutodoorExt = {
     },
     tolerance: number
   }[],
-  door_open_area: {x: number, y: number}[],
+  door_open_area: { x: number, y: number }[],
   resource_waitings: any[],
   name: string,
   description: string,
