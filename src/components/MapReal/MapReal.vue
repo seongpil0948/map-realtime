@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onBeforeMount, onBeforeUnmount, onMounted, ref } from 'vue';
-import { PStageConfig, Resources } from './types';
+import { PStageConfig, Resources, TWorker, WorkerDocument } from './types';
 import mockResource from '../../mock/resources'
 import maps from '../../mock/maps'
 import { extractKonva } from './konva';
@@ -26,7 +26,8 @@ const {
   encodedMap,
   windowSize,
   mapSize,
-  setResources
+  setResources,
+  updateWorker
 } = useMap({
   getInitialResources() {
     return Promise.resolve<any>(mockResource)
@@ -36,11 +37,27 @@ const configKonva: PStageConfig = getStageConfig(props, windowSize)
 const stageRef = ref<any>(null)
 
 const configResource = getMqttConfig()
-const { ignite } = useMqtt<Resources>({
+const topics = ['hello', 'worker'] as const
+
+const isResources = (data: any): data is Resources => {
+  return data.Location && data.Worker
+}
+const isWorker = (data: any): data is TWorker => {
+  return data.document && data.operation
+}
+const { ignite } = useMqtt<Resources | TWorker, typeof topics>({
   config: configResource,
-  onMessage(message) {
-    console.log('토픽 `' + configResource.topic + '`에서 메시지 수신:', message);
-    setResources(message)
+  topics,
+  onMessage(topic, message) {
+    console.log('토픽 `' + topic + '`에서 메시지 수신:', message);
+    if (topic === 'hello') {
+      if (isResources(message)) setResources(message)
+      else throw new Error('올바르지 않은 메시지 형식입니다')
+    }
+    else if (topic === 'worker') {
+      if (isWorker(message)) updateWorker(message)
+      else throw new Error('올바르지 않은 메시지 형식입니다')
+    }
   },
 })
 const { dispose } = ignite()
@@ -79,10 +96,16 @@ onBeforeUnmount(() => {
     <v-layer>
       <v-image :config="{ image: mapImgRef, x: mapSize.x, y: mapSize.y, draggable: false }" @mousemove="handleMouseMove"
         @mouseout="handleMouseOut" @wheel="handleWheel" />
-      <v-image v-for="location in resources?.Location" :key="location.id"
-        :config="{ image: location.image, x: location.pose.x, y: location.pose.y, rotation: location.pose.theta }" />
-      <v-image v-for="location in resources?.Worker" :key="location.id"
-        :config="{ image: location.image, x: location.pose.x, y: location.pose.y, rotation: location.pose.theta }" />
+      <v-image v-for="location in resources?.Location" :key="location.id" :config="{
+      image: location.image,
+      x: location.pose.x,
+      y: location.pose.y,
+      rotation: location.pose.theta
+    }" />
+      <v-image v-for="worker in resources?.Worker" :key="worker.id" :config="{
+      image: worker.image, x: worker.pose.x,
+      y: worker.pose.y, rotation: worker.pose.theta
+    }" />
 
       <v-text ref="text" :config="{
       x: 10,

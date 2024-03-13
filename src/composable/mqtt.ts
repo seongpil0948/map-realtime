@@ -1,15 +1,16 @@
 import mqtt from 'mqtt';
-import { ConfigAMQP } from './types';
-import { ref, shallowRef } from 'vue';
+import { ref } from 'vue';
 
-interface Props<Message = Record<string, any>> {
-  config: ConfigAMQP
-  onMessage: (message: Message) => void
+
+interface Props<Message, Topics extends readonly [string, string]> {
+  readonly config: mqtt.IClientOptions
+  readonly onMessage: (topic: Topics[number], message: Message) => void
+  readonly topics: Topics
 }
 
-export function useMqtt<Message = Record<string, any>>(p: Props<Message>) {
-  const { config, onMessage } = p;
-  const { host, port, topic, ...option } = config;
+export function useMqtt<Message, Topics extends readonly [string, string] = ['resource', 'worker']>(p: Props<Message, Topics>) {
+  const { config, onMessage, topics } = p;
+  const { host, port, ...option } = config;
   const connected = ref(false)
 
 
@@ -20,14 +21,17 @@ export function useMqtt<Message = Record<string, any>>(p: Props<Message>) {
       connected.value = true;
       console.log('MQTT ' + host + '에 연결되었습니다.');
       // 토픽 구독
-      client.subscribe(topic, (err, granted) => {
-        if (err) {
-          console.error('토픽 ' + topic + ' 구독 실패 : ', err);
-          return;
-        }
+      topics.forEach((topic) => {
+        client.subscribe(topic, (err, granted) => {
+          if (err) {
+            console.error('토픽 ' + topic + ' 구독 실패 : ', err);
+            return;
+          }
 
-        console.log('토픽 ' + topic + ' 구독 성공. granted: ', granted);
-      });
+          console.log('토픽 ' + topic + ' 구독 성공. granted: ', granted);
+        });
+      })
+
     });
 
     client.on('error', (err) => {
@@ -36,7 +40,7 @@ export function useMqtt<Message = Record<string, any>>(p: Props<Message>) {
 
     client.on('message', (topic, msg) => {
       try {
-        onMessage(JSON.parse(msg.toString()));
+        onMessage(topic as Topics[number], JSON.parse(msg.toString()));
       } catch (e) {
         console.error(topic, '토픽 메시지 파싱 오류:', e)
       }

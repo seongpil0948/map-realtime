@@ -1,11 +1,12 @@
-import { computed, onMounted, ref, shallowRef, watch } from "vue"
+import { computed, ref, shallowRef, watch } from "vue"
 import { getMap } from "../../../mock/api"
 import useImage from "./image"
 import { useWindowSize } from "@vueuse/core"
 import { getMapSize } from "../config"
 import maps from "../../../mock/maps"
-import { CleanResources, ImgDict, Resources } from "../types"
-import { thetaToDegree } from "../konva"
+import { CleanResources, CleanWorkerDoc, ImgDict, Resources, TWorker, Vector2D, WorkerDocument } from "../types"
+import { calcPose2D } from "../konva"
+
 
 
 export default function useMap(props: {
@@ -39,17 +40,39 @@ export default function useMap(props: {
     processResource()
   }
 
+  const updateWorker = (worker: TWorker) => {
+    const d = worker.document
+    if (!resources.value) return
+    const idx = resources.value.Worker.findIndex((w) => w.id === d.id)
+    const refineData = refineWorker(d)
+    if (idx === -1) {
+      resources.value.Worker.push(refineData)
+    } else {
+      resources.value.Worker[idx] = refineData
+    }
+  }
+
+  const getCenter = (): Vector2D => ({
+    x: mapSize.value.width / 2,
+    y: mapSize.value.height / 2
+  })
+
+  const refineWorker = (doc: WorkerDocument): CleanWorkerDoc => {
+    if (!loadedImages.value) throw new Error('loadedImages is not loaded')
+    return {
+      ...doc,
+      image: doc['status'] === 'idle' ? loadedImages.value['workerIdle'] : loadedImages.value['workerBusy'],
+      pose: calcPose2D(doc.type_specific.location.pose2d, getCenter())
+    }
+  }
+
+
   const processResource = () => {
+    console.info('processResource')
     const resource = resourcesRaw.value
     if (!resource) return
+    const cp2d = (p: Vector2D & { theta: number }) => calcPose2D(p, getCenter())
 
-    const mapCenterX = mapSize.value.width / 2
-    const mapCenterY = mapSize.value.height / 2
-    const calcPose2D = (pose: { x: number, y: number, theta: number }) => ({
-      x: pose.x + mapCenterX,
-      y: pose.y + mapCenterY,
-      theta: thetaToDegree(pose.theta)
-    })
     if (!isLoadedImage.value) return
     const imgs = loadedImages.value as ImgDict
     resources.value = {
@@ -58,15 +81,11 @@ export default function useMap(props: {
         return {
           ...location,
           image: imgs['marker'],
-          pose: calcPose2D(location.pose)
+          pose: cp2d(location.pose)
         }
       }),
-      Worker: resource.Worker.map((worker) => {
-        return {
-          ...worker,
-          image: imgs['workerIdle'],
-          pose: calcPose2D(worker.type_specific.location.pose2d)
-        }
+      Worker: resource.Worker.map((workerDoc) => {
+        return refineWorker(workerDoc)
 
       })
     } as CleanResources
@@ -93,7 +112,9 @@ export default function useMap(props: {
     windowSize,
     mapSize,
     isLoadedImage,
-    processResource, resources,
-    setResources
+    processResource,
+    resources,
+    setResources,
+    updateWorker
   }
 }

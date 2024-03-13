@@ -8,6 +8,8 @@ type PStageConfig = Omit<StageConfig, 'container'>
 export type { StageConfig, Stage, PStageConfig }
 export type { Image, ImageConfig } from 'konva/lib/shapes/Image'
 export type Vector2D = { x: number; y: number }
+export type Vector2DTheta = { theta: number } & Vector2D
+
 export type WidthHeightRef = ReturnType<typeof useWindowSize>
 export type Locations = {
   image: HTMLImageElement,
@@ -18,16 +20,90 @@ export type Locations = {
 }[]
 export type ImgDict = Record<ImgKeys, HTMLImageElement>
 export type ImgSrcDict = Record<ImgKeys, string>
+export interface WorkerSpecific {
+  robot_info: {
+    width: number
+    length: number
+    size_center_to_front: number
+    size_center_to_rear: number
+    size_center_to_left: number
+    size_center_to_right: number
+    model: string
+  }
+  battery: {
+    battery_level: number
+    now_charging: boolean
+    charge_source: string
+  }
+  location: {
+    map: string
+    pose2d: {
+      x: number
+      y: number
+      theta: number
+      id: number
+    }
+    semantic_location: any
+    romo_state: string
+    odometry: {
+      orient_w: number
+      orient_x: number
+      orient_y: number
+      orient_z: number
+      position_x: number
+      position_y: number
+      position_z: number
+      velo_dx: number
+      velo_dy: number
+      velo_dz: number
+    }
+    path_plan: any
+  }
+  ip: string
+  target_fms_ip: string
+  dynamic_footprint: any
+  home_station: {
+    name: string
+    id: any
+  }
+  fmz: {
+    fmz_id: any
+    current: any
+    node_path: any[]
+    destination: any
+  }
+}
+export type WorkerDocument = {
+  created_at: string
+  updated_at: string
+  status_p: string
+  id: string
+  uuid: string
+  name: string
+  status: "idle" | "busy"
+  type_specific: WorkerSpecific
+}
+export type TWorker = {
+  document_id: string
+  document: WorkerDocument
+  operation: string
+}
+export type CleanWorkerDoc = WorkerDocument & {
+  image: HTMLImageElement
+  pose: Vector2DTheta
+}
+
 export type Resources = {
   Location: ResourcesLocation[],
   Zone: ResourcesZone[],
   TeleporterGate: ResourcesTeleporterGate[],
   Marker: ResourcesMarker[],
   AutodoorExt: ResourcesAutodoorExt[],
-  Worker: any[]
+  Worker: WorkerDocument[]
 }
 export interface CleanResources extends Resources {
   Location: LocationClean[]
+  Worker: CleanWorkerDoc[]
 }
 
 export type Pose = {
