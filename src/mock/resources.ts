@@ -6,8 +6,8 @@ export default {
       "resource_active": true,
       "resource_type": "Location",
       "pose": {
-        "x": 22.168007189666923,
-        "y": -5.442924871257585,
+        "x": 45.13362690630683,
+        "y": -81.10495628685644,
         "theta": 1.570798040163865
       },
       "name": "Cafe Home",
@@ -23,8 +23,8 @@ export default {
       "resource_active": true,
       "resource_type": "Location",
       "pose": {
-        "x": 0.10441232449605309,
-        "y": -4.069100612058882,
+        "x": 142.98737198600247,
+        "y": -162.08390666667424,
         "theta": 4.71238898038469
       },
       "name": "1F_hall",
@@ -40,8 +40,8 @@ export default {
       "resource_active": true,
       "resource_type": "Location",
       "pose": {
-        "x": 10.786320375406177,
-        "y": -0.5393448718305152,
+        "x": 86.99503024670861,
+        "y": -159.1598196419888,
         "theta": -1.5707958859375606
       },
       "name": "1F_CargoPoint",
@@ -55,8 +55,8 @@ export default {
       "_id": "64508eac73ee4a543322caa7",
       "map": "644891e273ee4a54330ac27c",
       "pose": {
-        "x": -2.755213663664968,
-        "y": -8.0558554506947,
+        "x": 172.2140095745698,
+        "y": 140.03824694281832,
         "theta": -1.5617049281414626
       },
       "type": "waypoint",
@@ -72,8 +72,8 @@ export default {
       "_id": "65b1b5048323def9704210e3",
       "map": "644891e273ee4a54330ac27c",
       "pose": {
-        "x": 1.7031250000002416,
-        "y": -18.453124999999932,
+        "x": 74.86324813635014,
+        "y": -70.12167423743202,
         "theta": -1.56
       },
       "type": "waypoint",
@@ -687,5 +687,326 @@ export default {
       "updated_at": "2024-02-01T09:04:22.290Z",
       "id": "6448a76f73ee4a54330b0748"
     }
+  ],
+  "Worker": [
+    {
+      "_id": "65444a7e89a0c44c85c35e71",
+      "uuid": "uuid_gocart_virtual_vw_2",
+      "__v": 0,
+      "created_at": "2023-11-03T01:18:54.523Z",
+      "name": "vw_2",
+      "status": "idle",
+      "status_toggle": [],
+      "type_specific": {
+        "robot_info": {
+          "width": 0.5,
+          "length": 0.8,
+          "size_center_to_front": 0.4,
+          "size_center_to_rear": 0.4,
+          "size_center_to_left": 0.25,
+          "size_center_to_right": 0.25,
+          "model": "YMP-180SD-10"
+        },
+        "battery": {
+          "battery_level": 99.80799999999908,
+          "now_charging": false,
+          "charge_source": "none"
+        },
+        "location": {
+          "map": "6448a41973ee4a54330af998",
+          "pose2d": {
+            "x": -177.0785306628988,
+            "y": -34.298060121020825,
+            "theta": -0.1
+          },
+          "semantic_location": null,
+          "romo_state": "ready",
+          "odometry": {
+            "orient_w": 0,
+            "orient_x": 0,
+            "orient_y": 0,
+            "orient_z": 0,
+            "position_x": 0,
+            "position_y": 0,
+            "position_z": 0,
+            "velo_dx": 0,
+            "velo_dy": 0,
+            "velo_dz": 0
+          },
+          "path_plan": null
+        },
+        "ip": "175.198.209.70",
+        "dynamic_footprint": null,
+        "home_station": {
+          "name": "undefined",
+          "id": null
+        },
+        "target_fms_ip": "ams.robotconcert.org",
+        "fmz": {
+          "fmz_id": null,
+          "current": null,
+          "node_path": [],
+          "destination": null
+        }
+      },
+      "updated_at": "2024-03-12T05:44:24.542Z",
+      "status_p": "idle",
+      "id": "65444a7e89a0c44c85c35e71"
+    },
+    {
+      "_id": "6594c089f2ae2b9eb8e0502e1",
+      "uuid": "uuid_gocart_virtual_vw_3",
+      "__v": 0,
+      "created_at": "2024-01-03T02:03:53.175Z",
+      "name": "vw_3",
+      "status": "busy",
+      "status_toggle": [],
+      "type_specific": {
+        "robot_info": {
+          "width": 0.5,
+          "length": 0.8,
+          "size_center_to_front": 0.4,
+          "size_center_to_rear": 0.4,
+          "size_center_to_left": 0.25,
+          "size_center_to_right": 0.25,
+          "model": "YMP-180SD-10"
+        },
+        "battery": {
+          "battery_level": 99.8109999999991,
+          "now_charging": false,
+          "charge_source": "none"
+        },
+        "location": {
+          "map": "6448a41973ee4a54330af998",
+          "pose2d": {
+            "x": -117.36913866159817,
+            "y": 89.10354005953849,
+            "theta": -3.15,
+            "id": 0
+          },
+          "semantic_location": null,
+          "romo_state": "ready",
+          "odometry": {
+            "orient_w": 0,
+            "orient_x": 0,
+            "orient_y": 0,
+            "orient_z": 0,
+            "position_x": 0,
+            "position_y": 0,
+            "position_z": 0,
+            "velo_dx": 0,
+            "velo_dy": 0,
+            "velo_dz": 0
+          },
+          "path_plan": null
+        },
+        "ip": "175.198.209.70",
+        "target_fms_ip": "ams.robotconcert.org",
+        "dynamic_footprint": null,
+        "home_station": {
+          "name": "undefined",
+          "id": null
+        },
+        "fmz": {
+          "fmz_id": null,
+          "current": null,
+          "node_path": [],
+          "destination": null
+        }
+      },
+      "updated_at": "2024-03-12T05:44:24.543Z",
+      "status_p": "busy",
+      "id": "6594c089f2ae2b9eb8e0502e1"
+    },
+    {
+      "_id": "6594c089f2ae2b9eb8e0502e2",
+      "uuid": "uuid_gocart_virtual_vw_3",
+      "__v": 0,
+      "created_at": "2024-01-03T02:03:53.175Z",
+      "name": "vw_3",
+      "status": "busy",
+      "status_toggle": [],
+      "type_specific": {
+        "robot_info": {
+          "width": 0.5,
+          "length": 0.8,
+          "size_center_to_front": 0.4,
+          "size_center_to_rear": 0.4,
+          "size_center_to_left": 0.25,
+          "size_center_to_right": 0.25,
+          "model": "YMP-180SD-10"
+        },
+        "battery": {
+          "battery_level": 85.42799999993042,
+          "now_charging": false,
+          "charge_source": "none"
+        },
+        "location": {
+          "map": "6448a41973ee4a54330af998",
+          "pose2d": {
+            "x": -0.5237499999999997,
+            "y": 0.4045138888888893,
+            "theta": 5.497357475814205
+          },
+          "semantic_location": null,
+          "romo_state": "running",
+          "odometry": {
+            "orient_w": 0,
+            "orient_x": 0,
+            "orient_y": 0,
+            "orient_z": 0,
+            "position_x": 0,
+            "position_y": 0,
+            "position_z": 0,
+            "velo_dx": 0,
+            "velo_dy": 0,
+            "velo_dz": 0
+          },
+          "path_plan": {
+            "global": [
+              { "x": -0.22487499999999727, "y": 0.10538194444444571 },
+              { "x": 0.17362500000000125, "y": -0.0940393518518512 },
+              { "x": 0.671750000000003, "y": -0.0940393518518512 },
+              { "x": 1.1698749999999976, "y": -0.0940393518518512 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 }
+            ],
+            "local": [
+              {
+                "x": -0.5237499999999997,
+                "y": 0.4045138888888893,
+                "theta": 5.497357475814205
+              },
+              { "x": -0.5237499999999997, "y": 0.4045138888888893 },
+              { "x": -0.22487499999999727, "y": 0.10538194444444571 },
+              { "x": 0.17362500000000125, "y": -0.0940393518518512 },
+              { "x": 0.671750000000003, "y": -0.0940393518518512 },
+              { "x": 1.1698749999999976, "y": -0.0940393518518512 }
+            ]
+          }
+        },
+        "ip": "175.198.209.70",
+        "target_fms_ip": "ams.robotconcert.org",
+        "dynamic_footprint": null,
+        "home_station": { "name": "undefined", "id": null },
+        "fmz": {
+          "fmz_id": null,
+          "current": null,
+          "node_path": [],
+          "destination": null
+        }
+      },
+      "updated_at": "2024-03-13T01:43:26.160Z",
+      "status_p": "busy",
+      "id": "6594c089f2ae2b9eb8e0502e2"
+    },
+    {
+      "_id": "6594c089f2ae2b9eb8e0502e3",
+      "uuid": "uuid_gocart_virtual_vw_3",
+      "__v": 0,
+      "created_at": "2024-01-03T02:03:53.175Z",
+      "name": "vw_4",
+      "status": "busy",
+      "status_toggle": [],
+      "type_specific": {
+        "robot_info": {
+          "width": 0.5,
+          "length": 0.8,
+          "size_center_to_front": 0.4,
+          "size_center_to_rear": 0.4,
+          "size_center_to_left": 0.25,
+          "size_center_to_right": 0.25,
+          "model": "YMP-180SD-10"
+        },
+        "battery": {
+          "battery_level": 85.42699999993042,
+          "now_charging": false,
+          "charge_source": "none"
+        },
+        "location": {
+          "map": "6448a41973ee4a54330af998",
+          "pose2d": {
+            "x": 1.1698749999999976,
+            "y": -0.0940393518518512,
+            "theta": 0
+          },
+          "semantic_location": null,
+          "romo_state": "running",
+          "odometry": {
+            "orient_w": 0,
+            "orient_x": 0,
+            "orient_y": 0,
+            "orient_z": 0,
+            "position_x": 0,
+            "position_y": 0,
+            "position_z": 0,
+            "velo_dx": 0,
+            "velo_dy": 0,
+            "velo_dz": 0
+          },
+          "path_plan": {
+            "global": [
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 }
+            ],
+            "local": [
+              { "x": 1.1698749999999976, "y": -0.0940393518518512, "theta": 0 },
+              { "x": 1.1698749999999976, "y": -0.0940393518518512 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 },
+              { "x": 1.3598058852229542, "y": -0.21143099331554183 }
+            ]
+          }
+        },
+        "ip": "175.198.209.70",
+        "target_fms_ip": "ams.robotconcert.org",
+        "dynamic_footprint": null,
+        "home_station": { "name": "undefined", "id": null },
+        "fmz": {
+          "fmz_id": null,
+          "current": null,
+          "node_path": [],
+          "destination": null
+        }
+      },
+      "updated_at": "2024-03-13T01:43:28.287Z",
+      "status_p": "busy",
+      "id": "6594c089f2ae2b9eb8e0502e3"
+    },
   ]
 }

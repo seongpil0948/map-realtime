@@ -1,44 +1,49 @@
 import mqtt from 'mqtt';
 import { ref } from 'vue';
 
-export function useMqtt() {
-  const connected = ref(false)
-  const message = ref('')
-  const host = '192.168.0.101';
-  const port = '15675'
-  const option = {
-    username: 'admin',
-    password: '0525'
-  }
 
-  const getClient = () => {
+interface Props<Message, Topics extends readonly [string, string]> {
+  readonly config: mqtt.IClientOptions
+  readonly onMessage: (topic: Topics[number], message: Message) => void
+  readonly topics: Topics
+}
+
+export function useMqtt<Message, Topics extends readonly [string, string] = ['resource', 'worker']>(p: Props<Message, Topics>) {
+  const { config, onMessage, topics } = p;
+  const { host, port, ...option } = config;
+  const connected = ref(false)
+
+
+  const ignite = () => {
     const client = mqtt.connect(`ws://${host}:${port}/ws`, option);
 
     client.on('connect', () => {
-        connected.value = true;
-        console.log('MQTT ' + host + '에 연결되었습니다.');
-    
-        // 구독할 토픽 설정
-        const topic = 'hello';
-    
-        // 토픽 구독
+      connected.value = true;
+      console.log('MQTT ' + host + '에 연결되었습니다.');
+      // 토픽 구독
+      topics.forEach((topic) => {
         client.subscribe(topic, (err, granted) => {
           if (err) {
             console.error('토픽 ' + topic + ' 구독 실패 : ', err);
             return;
           }
-          
-          console.log('토픽 ' + topic + ' 구독 성공.');
+
+          console.log('토픽 ' + topic + ' 구독 성공. granted: ', granted);
         });
+      })
+
     });
-    
+
     client.on('error', (err) => {
       console.error("MQTT 연결 오류 :", err)
     })
 
     client.on('message', (topic, msg) => {
-      message.value = msg.toString();
-      console.log('토픽 `' + topic + '`에서 메시지 수신:', message.value.toString());
+      try {
+        onMessage(topic as Topics[number], JSON.parse(msg.toString()));
+      } catch (e) {
+        console.error(topic, '토픽 메시지 파싱 오류:', e)
+      }
     });
 
     // 연결 종료 시 이벤트 처리
@@ -47,19 +52,19 @@ export function useMqtt() {
       console.log('MQTT 브로커 연결 종료.');
     });
 
-    const disconnected = () => {
-        console.log('MQTT 연결 종료')
-        client.end()
+    const dispose = () => {
+      console.log('MQTT 연결 종료')
+      client.end()
     }
 
     return {
-        client,
-        disconnected,
+      client,
+      dispose,
     }
   }
 
-    return {
-        getClient
-    }
-  
- }
+  return {
+    ignite
+  }
+
+}
