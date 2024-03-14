@@ -19,7 +19,10 @@ export const getStageConfig = (mapProps: Props, windowSize: WidthHeightRef): PSt
     height: height.value * 2,
     draggable: true,
     scaleX: mapProps.scale,
-    scaleY: mapProps.scale
+    scaleY: mapProps.scale,
+    // offset: {
+    //   x: 200
+    // }
   }
 }
 

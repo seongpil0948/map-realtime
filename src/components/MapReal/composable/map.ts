@@ -1,4 +1,4 @@
-import { Ref, computed, ref, shallowRef, watch } from "vue"
+import { Ref, computed, onMounted, ref, shallowRef, watch } from "vue"
 import { getMap } from "../../../mock/api"
 import useImage from "./image"
 import { useWindowSize } from "@vueuse/core"
@@ -6,6 +6,7 @@ import { getMapSize } from "../config"
 import maps from "../../../mock/maps"
 import { CleanResources, CleanWorkerDoc, ImgDict, Resources, TWorker, Vector2D, WorkerDocument } from "../types/resource"
 import { calcPose2D } from "../utils"
+import { extractKonva } from "../konva"
 
 
 
@@ -39,6 +40,18 @@ export default function useMap(props: {
       // }
     }
   }
+
+  const zoomIn = () => {
+    const { stage } = extractKonva(stageRef)
+    const scale = stage.scaleX()
+    const center = getCenter()
+    stage.position({ x: 0, y: 0 })
+    stage.offset({ x: center.x / 2, y: center.y / 2 })
+    // stage.scale({ x: scale * 1.1, y: scale * 1.1 })
+  }
+  onMounted(() => {
+    zoomIn()
+  })
 
   const handleLoadImage = (images: ImgDict) => {
     loadedImages.value = images
