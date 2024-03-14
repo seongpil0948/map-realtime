@@ -1,24 +1,27 @@
-import { computed, ref, shallowRef, watch } from "vue"
+import { Ref, computed, ref, shallowRef, watch } from "vue"
 import { getMap } from "../../../mock/api"
 import useImage from "./image"
 import { useWindowSize } from "@vueuse/core"
 import { getMapSize } from "../config"
 import maps from "../../../mock/maps"
-import { CleanResources, CleanWorkerDoc, ImgDict, Resources, TWorker, Vector2D, WorkerDocument } from "../types"
-import { calcPose2D } from "../konva"
+import { CleanResources, CleanWorkerDoc, ImgDict, Resources, TWorker, Vector2D, WorkerDocument } from "../types/resource"
+import { calcPose2D } from "../utils"
 
 
 
 export default function useMap(props: {
   getInitialResources: () => Promise<Resources>
+  stageRef: Ref<any>
 }) {
+  const { stageRef } = props
+  // TODO: to shallowRef
   const mapImgRef = ref<HTMLImageElement | null>(null)
   const loadedImages = shallowRef<ImgDict>()
   const { loadImage, loadImages } = useImage()
   const windowSize = useWindowSize()
 
   const resourcesRaw = shallowRef<Resources>()
-  const resources = shallowRef<CleanResources>()
+  const resources = ref<CleanResources>()
   const encodedMap = ref<string>(maps[0].id)
   const mapSize = computed(() => getMapSize(windowSize))
 
@@ -26,6 +29,14 @@ export default function useMap(props: {
     const targetEncodedMapCode = getMap(targetValue).encoded_map
     if (targetEncodedMapCode) {
       mapImgRef.value = loadImage({ src: targetEncodedMapCode, width: mapSize.value.width, height: mapSize.value.height })
+      // if (stageRef.value) {
+      //   const { stage } = extractKonva(stageRef)
+      //   // zoom in to center of image
+      //   const center = getCenter()
+      //   const scale = stage.scaleX()
+      //   stage.scale({ x: scale, y: scale })
+      //   stage.position(center)
+      // }
     }
   }
 
@@ -49,6 +60,8 @@ export default function useMap(props: {
       resources.value.Worker.push(refineData)
     } else {
       resources.value.Worker[idx] = refineData
+      const ww = resources.value.Worker[idx]
+      console.log('resources.value.Worker', ww.id, ww.status, ww.type_specific.location.path_plan)
     }
   }
 
@@ -93,7 +106,6 @@ export default function useMap(props: {
   }
 
   watch(() => mapSize.value, (value) => {
-    console.log('mapSize changed', value)
     changeEncodedMap(encodedMap.value)
   }, {
     immediate: true
@@ -115,6 +127,7 @@ export default function useMap(props: {
     processResource,
     resources,
     setResources,
-    updateWorker
+    updateWorker,
+    getCenter
   }
 }

@@ -1,7 +1,7 @@
 // import type { EditorState } from '@codemirror/state'
 // import type { EditorView, ViewUpdate } from '@codemirror/view'
 
-import { Vector2D } from "./types";
+import { Vector2D } from "./types/resource";
 
 
 export type MapEvent = {

@@ -4,8 +4,6 @@ import { injectGlobalConfig } from './config'
 import Component from './MapReal.vue'
 
 export type { Props } from './props'
-export type { Events } from './events'
-export { DEFAULT_CONFIG } from './config'
 
 export const MapReal = Component
 export const install: Plugin = (app, defaultConfig?: Props) => {

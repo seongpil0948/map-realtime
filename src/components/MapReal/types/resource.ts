@@ -1,29 +1,58 @@
-export type { LayerConfig, Layer } from 'konva/lib/Layer'
 import { useWindowSize } from '@vueuse/core'
-import type { NodeConfig, Node } from 'konva/lib/Node'
-export type { NodeConfig, Node }
-import type { StageConfig, Stage } from 'konva/lib/Stage'
-import { ImgKeys } from './composable/image'
-type PStageConfig = Omit<StageConfig, 'container'>
-export type { StageConfig, Stage, PStageConfig }
-export type { Image, ImageConfig } from 'konva/lib/shapes/Image'
-export type Vector2D = { x: number; y: number }
-export type Vector2DTheta = { theta: number } & Vector2D
+import { ImgKeys } from '../composable/image'
 
+export type Vector2D = { x: number; y: number }
+export type Vector3D = Vector2D & { z: number }
+
+export type Vector2DTheta = { theta: number } & Vector2D
 export type WidthHeightRef = ReturnType<typeof useWindowSize>
-export type Locations = {
+export type WidthHeight = { width: number; height: number }
+export type WidthHeight2DTheta = WidthHeight & Vector2DTheta
+
+export type Locations = (Vector2DTheta & {
   image: HTMLImageElement,
-  x: number,
-  y: number,
-  theta: number
   label: string
-}[]
+})[]
+interface CommonDate {
+  created_at: string
+  updated_at: string
+}
+
 export type ImgDict = Record<ImgKeys, HTMLImageElement>
 export type ImgSrcDict = Record<ImgKeys, string>
+
+export type PathPlanGlobal = Vector2D[]
+export type PathPlanLocal = (Vector2D & {
+  theta?: number // only for the first point as robot current pose
+})[]
+export type PathPlan = {
+  global: PathPlanGlobal
+  local: PathPlanLocal
+}
+interface WorkerLocation {
+  map: string
+  pose2d: Vector2DTheta & { id: number }
+  semantic_location: any
+  romo_state: string
+  odometry: {
+    orient_w: number
+    orient_x: number
+    orient_y: number
+    orient_z: number
+    position_x: number
+    position_y: number
+    position_z: number
+    velo_dx: number
+    velo_dy: number
+    velo_dz: number
+  }
+  path_plan: PathPlan | null
+}
+interface WorkerLocationActive extends WorkerLocation {
+  path_plan: PathPlan
+}
 export interface WorkerSpecific {
-  robot_info: {
-    width: number
-    length: number
+  robot_info: WidthHeight & {
     size_center_to_front: number
     size_center_to_rear: number
     size_center_to_left: number
@@ -35,30 +64,7 @@ export interface WorkerSpecific {
     now_charging: boolean
     charge_source: string
   }
-  location: {
-    map: string
-    pose2d: {
-      x: number
-      y: number
-      theta: number
-      id: number
-    }
-    semantic_location: any
-    romo_state: string
-    odometry: {
-      orient_w: number
-      orient_x: number
-      orient_y: number
-      orient_z: number
-      position_x: number
-      position_y: number
-      position_z: number
-      velo_dx: number
-      velo_dy: number
-      velo_dz: number
-    }
-    path_plan: any
-  }
+  location: WorkerLocation
   ip: string
   target_fms_ip: string
   dynamic_footprint: any
@@ -73,15 +79,19 @@ export interface WorkerSpecific {
     destination: any
   }
 }
-export type WorkerDocument = {
-  created_at: string
-  updated_at: string
+export type WorkerSpecificActive = WorkerSpecific & {
+  location: WorkerLocationActive
+}
+export type WorkerDocument = CommonDate & {
   status_p: string
   id: string
   uuid: string
   name: string
   status: "idle" | "busy"
   type_specific: WorkerSpecific
+}
+export type WorkerDocumentActive = WorkerDocument & {
+  type_specific: WorkerSpecificActive
 }
 export type TWorker = {
   document_id: string
@@ -90,8 +100,9 @@ export type TWorker = {
 }
 export type CleanWorkerDoc = WorkerDocument & {
   image: HTMLImageElement
-  pose: Vector2DTheta
+  pose: Pose
 }
+
 
 export type Resources = {
   Location: ResourcesLocation[],
@@ -106,11 +117,7 @@ export interface CleanResources extends Resources {
   Worker: CleanWorkerDoc[]
 }
 
-export type Pose = {
-  x: number,
-  y: number,
-  theta: number
-}
+export type Pose = Vector2DTheta
 
 export type ResourcesLocation = {
   _id: string,
@@ -149,14 +156,14 @@ export type ResourcesZone = {
   worker_params?: WorkerParams,
   created_at: string,
   updated_at: string,
-  polygon: { x: number, y: number }[],
+  polygon: Vector2D[],
   id: string
 }
 
 export type ResourcesTeleporterGate = {
   _id: string,
   networks: any[],
-  resource_waitings: {
+  resource_waitings: (CommonDate & {
     _id: string,
     map: string,
     pose: Pose,
@@ -165,16 +172,14 @@ export type ResourcesTeleporterGate = {
     description: string,
     resource_active: boolean,
     resource_type: string,
-    created_at: string,
-    updated_at: string,
     id: string
-  }[],
+  })[],
   description?: string,
   resource_active: boolean,
   resource_type: string,
   name: string,
   map: string,
-  area: { x: number, y: number, theta: number, width: number, height: number },
+  area: WidthHeight2DTheta,
   aligns: {
     entries: Pose[],
     exits: Pose[]
@@ -189,7 +194,7 @@ export type ResourcesTeleporterGate = {
   },
   created_at: string,
   updated_at: string,
-  teleporter: {
+  teleporter: CommonDate & {
     _id: string,
     type: string,
     properties: {
@@ -209,13 +214,11 @@ export type ResourcesTeleporterGate = {
     description?: string,
     resource_active: boolean,
     resource_type: string,
-    created_at: string,
-    updated_at: string,
     standing_offset: any[],
     id: string
   },
   evacuation: string,
-  waiting_after_cancel: {
+  waiting_after_cancel: CommonDate & {
     _id: string,
     description: string,
     resource_active: boolean,
@@ -224,17 +227,12 @@ export type ResourcesTeleporterGate = {
     map: string,
     name: string,
     type: string,
-    created_at: string,
-    updated_at: string,
     id: string
   },
   doors: {
-    pose: {
-      x: number,
-      y: number
-    },
+    pose: Pose,
     door_no: number,
-    evacuation: {
+    evacuation: CommonDate & {
       _id: string,
       description: string,
       resource_active: boolean,
@@ -243,8 +241,6 @@ export type ResourcesTeleporterGate = {
       map: string,
       name: string,
       type: string,
-      created_at: string,
-      updated_at: string,
       id: string,
     }
   }[],
@@ -268,13 +264,10 @@ export type ResourcesMarker = {
   map: string,
   pose: Pose,
   gocart_marker: boolean,
-  marker_value: {
+  marker_value: Vector3D & {
     no: number,
     id: number,
     rid: number,
-    x: number,
-    y: number,
-    z: number,
     rx: number,
     ry: number,
     rz: number
@@ -293,7 +286,7 @@ export type ResourcesMarker = {
   id: string
 }
 
-export type ResourcesAutodoorExt = {
+export type ResourcesAutodoorExt = CommonDate & {
   properties: {
     connection: {
       ip: string,
@@ -311,11 +304,7 @@ export type ResourcesAutodoorExt = {
   map: string,
   polygon: { x: number, y: number }[],
   aligns: {
-    pose: {
-      x: number,
-      y: number,
-      theta: number
-    },
+    pose: Vector2DTheta,
     tolerance: number
   }[],
   door_open_area: { x: number, y: number }[],
@@ -324,7 +313,5 @@ export type ResourcesAutodoorExt = {
   description: string,
   resource_active: boolean,
   resource_type: string,
-  created_at: string,
-  updated_at: string,
   id: string
 }

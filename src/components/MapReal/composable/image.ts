@@ -1,8 +1,8 @@
 import { shallowRef } from "vue";
-import { ImgDict, ImgSrcDict } from "../types";
+import { ImgDict, ImgSrcDict } from "../types/resource";
 
 
-const STATIC_IMG_DICT = Object.freeze({
+export const STATIC_IMG_DICT = Object.freeze({
   "marker": 'map__full--e53.svg',
   "workerIdle": 'worker-idle.svg',
   "workerBusy": 'worker-busy.svg',

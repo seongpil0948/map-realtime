@@ -10,9 +10,13 @@ export default function useDrag() {
   const handleDrag = (event: any) => {
     console.log('Drag', event)
   }
+  const handleDragMove = (event: any) => {
+    console.log('DragMove', event)
+  }
   return {
     handleDragStart,
     handleDragEnd,
-    handleDrag
+    handleDrag,
+    handleDragMove
   }
 }
