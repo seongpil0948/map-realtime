@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, reactive, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, reactive, ref } from "vue";
 import {
   CircleConfig,
+  CleanWorkerDoc,
   EvtMouseOut,
   EvtMouseOver,
   LineConfig,
@@ -147,9 +148,28 @@ const handleMouseOverCircle = (e: EvtMouseOver) => {
     }
   }
 };
+const getWorkerText = (w: CleanWorkerDoc): TextConfig => {
+  const c = getDefaultConfig.text();
+  // c.x = w.pose.x + w.image.width * Math.cos(w.pose.theta);
+  // c.y = w.pose.y - w.image.height * Math.sin(w.pose.theta);
+  c.x = w.image.width / 2;
+  c.y = -10;
+  c.align = "center";
+  c.text = w.name;
+  c.fill = "red";
+  return c;
+};
 const handleMouseOutCircle = (e: EvtMouseOut) => {
   // hide tooltip
   tooltipConfig.text = "";
+};
+
+onMounted(() => {
+  console.info(stageRef.value.getStage());
+  console.info(stageRef.value.getNode());
+});
+const handleWorkerChange = (e: any) => {
+  console.log("handleWorkerChange", e);
 };
 </script>
 
@@ -195,16 +215,30 @@ const handleMouseOutCircle = (e: EvtMouseOut) => {
           rotation: location.pose.theta,
         }"
       />
-      <v-image
+      <v-group
         v-for="worker in resources?.Worker"
         :key="worker.id"
         :config="{
-          image: worker.image,
           x: worker.pose.x,
           y: worker.pose.y,
           rotation: worker.pose.theta,
         }"
-      />
+      >
+        <v-image
+          @change="handleWorkerChange"
+          @imageChange="handleWorkerChange"
+          @imagechange="handleWorkerChange"
+          :config="{
+            image: worker.image,
+            x: 0,
+            y: 0,
+            width: 30,
+            height: 20,
+            fill: 'violet',
+          }"
+        />
+        <v-text :config="getWorkerText(worker)"></v-text>
+      </v-group>
 
       <!-- <v-shape ref="shapeRef" :config="shapeConfig" /> -->
       <v-line

@@ -10,6 +10,8 @@ export type { Shape, ShapeConfig, ShapeConfigHandler } from 'konva/lib/Shape'
 export type { Circle, CircleConfig } from 'konva/lib/shapes/Circle'
 export type { Line, LineConfig } from 'konva/lib/shapes/Line'
 export type { Text, TextConfig } from 'konva/lib/shapes/Text'
+export type { Label, LabelConfig } from 'konva/lib/shapes/Label'
+export type { Group, GroupConfig } from 'konva/lib/Group'
 
 import type { KonvaEventObject } from 'konva/lib/Node'
 export type { KonvaEventListener } from 'konva/lib/Node'

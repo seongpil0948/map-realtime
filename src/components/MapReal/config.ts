@@ -15,14 +15,11 @@ export const useGlobalConfig = () => {
 export const getStageConfig = (mapProps: Props, windowSize: WidthHeightRef): PStageConfig => {
   const { width, height } = windowSize
   return {
-    width: width.value * 2,
-    height: height.value * 2,
+    width: width.value,
+    height: height.value,
     draggable: true,
     scaleX: mapProps.scale,
     scaleY: mapProps.scale,
-    // offset: {
-    //   x: 200
-    // }
   }
 }
 

@@ -85,11 +85,12 @@ export default function useMap(props: {
 
   const refineWorker = (doc: WorkerDocument): CleanWorkerDoc => {
     if (!loadedImages.value) throw new Error('loadedImages is not loaded')
-    return {
+    const w = {
       ...doc,
       image: doc['status'] === 'idle' ? loadedImages.value['workerIdle'] : loadedImages.value['workerBusy'],
       pose: calcPose2D(doc.type_specific.location.pose2d, getCenter())
     }
+    return w
   }
 
 
