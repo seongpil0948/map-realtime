@@ -13,10 +13,10 @@ export type Locations = (Vector2DTheta & {
   image: HTMLImageElement,
   label: string
 })[]
-interface CommonDate {
-  created_at: string
-  updated_at: string
-}
+
+export type Common3D<prefix extends string> = {
+  [k in `${prefix}x` | `${prefix}y` | `${prefix}z` | `${prefix}w`] : number
+} 
 
 export type ImgDict = Record<ImgKeys, HTMLImageElement>
 export type ImgSrcDict = Record<ImgKeys, string>
@@ -34,23 +34,36 @@ interface WorkerLocation {
   pose2d: Vector2DTheta & { id: number }
   semantic_location: any
   romo_state: string
-  odometry: {
-    orient_w: number
-    orient_x: number
-    orient_y: number
-    orient_z: number
-    position_x: number
-    position_y: number
-    position_z: number
-    velo_dx: number
-    velo_dy: number
-    velo_dz: number
-  }
+  odometry: Common3D<'orient_'> & Common3D<'position_'> & Common3D<'velo_'>
   path_plan: PathPlan | null
 }
 interface WorkerLocationActive extends WorkerLocation {
   path_plan: PathPlan
 }
+
+interface CommonDate {
+  created_at: string
+  updated_at: string
+}
+
+interface CommonLocInfo {
+  map: string,
+  type: string,
+  name: string,
+}
+
+interface CommonResActjvInfo {
+  description: string,
+  resource_active: boolean,
+  resource_type: string,
+}
+
+interface CommonIdInfo {
+  _id: string,
+  pose: Pose,
+  id: string
+}
+
 export interface WorkerSpecific {
   robot_info: WidthHeight & {
     size_center_to_front: number
@@ -67,16 +80,16 @@ export interface WorkerSpecific {
   location: WorkerLocation
   ip: string
   target_fms_ip: string
-  dynamic_footprint: any
+  dynamic_footprint: unknown
   home_station: {
     name: string
-    id: any
+    id: unknown
   }
   fmz: {
-    fmz_id: any
-    current: any
-    node_path: any[]
-    destination: any
+    fmz_id: unknown
+    current: unknown
+    node_path: unknown[]
+    destination: unknown
   }
 }
 export type WorkerSpecificActive = WorkerSpecific & {
@@ -103,7 +116,6 @@ export type CleanWorkerDoc = WorkerDocument & {
   pose: Pose
 }
 
-
 export type Resources = {
   Location: ResourcesLocation[],
   Zone: ResourcesZone[],
@@ -119,19 +131,8 @@ export interface CleanResources extends Resources {
 
 export type Pose = Vector2DTheta
 
-export type ResourcesLocation = {
-  _id: string,
-  description: string,
-  resource_active: boolean,
-  resource_type: string,
-  pose: Pose,
-  name: string,
-  map: string,
-  type: string,
-  created_at: string,
-  updated_at: string,
-  id: string
-}
+export type ResourcesLocation = CommonDate & CommonLocInfo & CommonResActjvInfo & CommonIdInfo
+
 export type LocationClean = {
   image?: HTMLImageElement,
 } & ResourcesLocation
@@ -139,44 +140,23 @@ export type LocationClean = {
 
 export type WorkerParams = {
   designated: {
-    pose: any[]
+    pose: unknown[]
   }
 }
 
-export type ResourcesZone = {
-  areas?: any[],
+export type ResourcesZone = CommonDate & CommonLocInfo & CommonResActjvInfo & {
+  areas?: unknown[],
   _id: string,
-  params_sets?: any[],
-  description?: string,
-  resources_active: boolean,
-  resources_type: string,
-  name: string,
-  type: string,
-  map: string,
+  params_sets?: unknown[],
   worker_params?: WorkerParams,
-  created_at: string,
-  updated_at: string,
   polygon: Vector2D[],
   id: string
 }
 
-export type ResourcesTeleporterGate = {
+export type ResourcesTeleporterGate = CommonDate & CommonResActjvInfo & {
   _id: string,
-  networks: any[],
-  resource_waitings: (CommonDate & {
-    _id: string,
-    map: string,
-    pose: Pose,
-    type: string,
-    name: string,
-    description: string,
-    resource_active: boolean,
-    resource_type: string,
-    id: string
-  })[],
-  description?: string,
-  resource_active: boolean,
-  resource_type: string,
+  networks: unknown[],
+  resource_waitings: (CommonDate & CommonLocInfo & CommonResActjvInfo & CommonIdInfo)[],
   name: string,
   map: string,
   area: WidthHeight2DTheta,
@@ -192,9 +172,7 @@ export type ResourcesTeleporterGate = {
     marker_id: number,
     marker_pose: Pose
   },
-  created_at: string,
-  updated_at: string,
-  teleporter: CommonDate & {
+  teleporter: CommonDate & CommonResActjvInfo & {
     _id: string,
     type: string,
     properties: {
@@ -209,45 +187,22 @@ export type ResourcesTeleporterGate = {
       max_floor: number,
       min_floor: number
     },
-    site?: any,
+    site?: unknown,
     name: string,
-    description?: string,
-    resource_active: boolean,
-    resource_type: string,
-    standing_offset: any[],
+    standing_offset: unknown[],
     id: string
   },
   evacuation: string,
-  waiting_after_cancel: CommonDate & {
-    _id: string,
-    description: string,
-    resource_active: boolean,
-    resource_type: string,
-    pose: Pose,
-    map: string,
-    name: string,
-    type: string,
-    id: string
-  },
+  waiting_after_cancel: CommonDate & CommonLocInfo & CommonResActjvInfo & CommonIdInfo 
   doors: {
     pose: Pose,
     door_no: number,
-    evacuation: CommonDate & {
-      _id: string,
-      description: string,
-      resource_active: boolean,
-      resource_type: string,
-      pose: Pose,
-      map: string,
-      name: string,
-      type: string,
-      id: string,
-    }
+    evacuation: CommonDate & CommonLocInfo & CommonResActjvInfo & CommonIdInfo
   }[],
   id: string
 }
 
-export type ResourcesMarker = {
+export type ResourcesMarker = CommonDate & CommonResActjvInfo & CommonIdInfo & {
   param_point: {
     pose: Pose,
     landform: {
@@ -260,33 +215,22 @@ export type ResourcesMarker = {
     distance: number,
     backward: boolean
   },
-  _id: string,
   map: string,
-  pose: Pose,
   gocart_marker: boolean,
-  marker_value: Vector3D & {
+  marker_value: Vector3D & Common3D<'r'> & {
     no: number,
     id: number,
     rid: number,
-    rx: number,
-    ry: number,
-    rz: number
   },
   chargeable: boolean,
   charger_type: string,
-  tags: any[],
+  tags: unknown[],
   parking_offset: Pose,
   barrier: number,
   name: string,
-  description: string,
-  resource_active: boolean,
-  resource_type: string,
-  created_at: string,
-  updated_at: string,
-  id: string
 }
 
-export type ResourcesAutodoorExt = CommonDate & {
+export type ResourcesAutodoorExt = CommonDate & CommonResActjvInfo & {
   properties: {
     connection: {
       ip: string,
@@ -302,16 +246,13 @@ export type ResourcesAutodoorExt = CommonDate & {
   },
   _id: string,
   map: string,
-  polygon: { x: number, y: number }[],
+  polygon: Vector2D[],
   aligns: {
     pose: Vector2DTheta,
     tolerance: number
   }[],
-  door_open_area: { x: number, y: number }[],
-  resource_waitings: any[],
+  door_open_area: Vector2D[],
+  resource_waitings: unknown[],
   name: string,
-  description: string,
-  resource_active: boolean,
-  resource_type: string,
   id: string
 }
