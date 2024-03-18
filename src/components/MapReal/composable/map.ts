@@ -1,27 +1,30 @@
-import { Ref, computed, onMounted, ref, shallowRef, watch } from "vue"
+import { Ref, computed, nextTick, onMounted, ref, shallowRef, watch } from "vue"
 import { getMap } from "../../../mock/api"
 import useImage from "./image"
-import {  useWindowSize } from "@vueuse/core"
-import { getMapSize } from "../config"
+import { useWindowSize } from "@vueuse/core"
+import { getDefaultConfig, getMapSize } from "../config"
 import maps from "../../../mock/maps"
 import { CleanResources, CleanWorkerDoc, ImgDict, Resources, TWorker, Vector2D, WorkerDocument } from "../types/resource"
 import { calcPose2D } from "../utils"
 import { extractKonva } from "../konva"
+import { TextConfig } from "../types"
 
 
 
 export default function useMap(props: {
   getInitialResources: () => Promise<Resources>
   stageRef: Ref<any>
+  handleUpdateWorker: (worker: CleanWorkerDoc) => void
+  handleUpdateResources: () => void
 }) {
-  const { stageRef } = props
+  const { stageRef, handleUpdateResources, handleUpdateWorker } = props
   // TODO: to shallowRef
   const mapImgRef = ref<HTMLImageElement | null>(null)
   const loadedImages = shallowRef<ImgDict>()
   const { loadImage, loadImages } = useImage()
   const windowSize = useWindowSize()
 
-  const resourcesRaw = shallowRef<Resources>()
+  const resourcesRaw = ref<Resources>()
   const resources = ref<CleanResources>()
   const encodedMap = ref<string>(maps[0].id)
   const mapSize = computed(() => getMapSize(windowSize))
@@ -30,7 +33,7 @@ export default function useMap(props: {
     const targetEncodedMapCode = getMap(targetValue).encoded_map
     if (targetEncodedMapCode) {
       mapImgRef.value = loadImage({ src: targetEncodedMapCode, width: mapSize.value.width, height: mapSize.value.height })
-      if(stageRef.value){
+      if (stageRef.value) {
         zoomIn()
       }
       // if (stageRef.value) {
@@ -49,7 +52,7 @@ export default function useMap(props: {
     // const scale = stage.scaleX()
     const center = getCenter()
     stage.position({ x: 0, y: 0 })
-    stage.offset({ x: center.x / 2, y: center.y / 2 }) 
+    stage.offset({ x: center.x / 2, y: center.y / 2 })
     // stage.scale({ x: scale * 2, y: scale * 2 })
 
     // stage.position({x: center.x, y: center.y})
@@ -74,17 +77,21 @@ export default function useMap(props: {
   }
 
   const updateWorker = (worker: TWorker) => {
+
     const d = worker.document
     if (!resources.value) return
     const idx = resources.value.Worker.findIndex((w) => w.id === d.id)
     const refineData = refineWorker(d)
     if (idx === -1) {
+      handleUpdateWorker(refineData)
       resources.value.Worker.push(refineData)
     } else {
       resources.value.Worker[idx] = refineData
       const ww = resources.value.Worker[idx]
-      console.log('resources.value.Worker', ww.id, ww.status, ww.type_specific.location.path_plan)
+      handleUpdateWorker(ww)
     }
+    setWorkerTexts()
+
   }
 
   const getCenter = (): Vector2D => ({
@@ -101,6 +108,30 @@ export default function useMap(props: {
     }
     return w
   }
+
+  const workerGroupRef = ref<any[]>([]);
+  const workerTexts = ref<TextConfig[]>([]);
+  const setWorkerTexts = () => {
+    const texts: TextConfig[] = [];
+    nextTick(() => {
+      workerGroupRef.value.forEach((x) => {
+        const n = x.getNode();
+        const rect = n.getClientRect({ relativeTo: stageRef.value.getNode() });
+        // const rect = n.getClientRect();
+        texts.push({
+          ...getDefaultConfig.text(),
+          ...{
+            x: rect.x + rect.width / 4,
+            y: rect.y - 10,
+            text: "text",
+            fill: "red",
+            align: "center",
+          },
+        });
+      });
+      workerTexts.value = texts;
+    })
+  };
 
 
   const processResource = () => {
@@ -125,6 +156,8 @@ export default function useMap(props: {
 
       })
     } as CleanResources
+    setWorkerTexts()
+    handleUpdateResources()
     console.log('resources.value', resources.value)
   }
 
@@ -151,6 +184,9 @@ export default function useMap(props: {
     resources,
     setResources,
     updateWorker,
-    getCenter
+    getCenter,
+    setWorkerTexts,
+    workerGroupRef,
+    workerTexts,
   }
 }
