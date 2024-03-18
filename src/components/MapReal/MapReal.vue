@@ -1,15 +1,7 @@
 <script setup lang="ts">
-import {
-  computed,
-  onBeforeUnmount,
-  onMounted,
-  reactive,
-  ref,
-  watch,
-} from "vue";
+import { onBeforeUnmount, reactive, ref, watch } from "vue";
 import {
   CircleConfig,
-  CleanWorkerDoc,
   EvtMouseOut,
   EvtMouseOver,
   LineConfig,
@@ -18,7 +10,7 @@ import {
   TWorker,
   TextConfig,
   WorkerDocumentActive,
-} from "./types";
+} from "../../types";
 import mockResource from "../../mock/resources";
 import maps from "../../mock/maps";
 import { extractKonva, makeWorker2Line } from "./konva";
@@ -30,7 +22,6 @@ import {
   topicsByHost,
 } from "./config";
 import { MapEvent } from "./events";
-import { useMqtt } from "../../composable/mqtt";
 import useMap from "./composable/map";
 import useMouseWheel from "./composable/wheel";
 import useDrag from "./composable/drag";
@@ -42,6 +33,7 @@ import {
 } from "./utils";
 import Konva from "konva";
 import { RectConfig } from "konva/lib/shapes/Rect";
+import { useMqtt } from "./composable/mqtt";
 
 const props = withDefaults(defineProps<Props>(), {
   ...getDefaultConfig.props(),
@@ -314,3 +306,4 @@ watch(
     </v-layer>
   </v-stage>
 </template>
+../../../mock/resources../../../mock/maps ../../types

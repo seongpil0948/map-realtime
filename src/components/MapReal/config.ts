@@ -2,7 +2,7 @@ import type { App } from 'vue'
 import { inject } from 'vue'
 import type { Props } from './props'
 import { IClientOptions } from 'mqtt'
-import type { WidthHeightRef, PStageConfig, CircleConfig, TextConfig, LineConfig } from './types'
+import type { WidthHeightRef, PStageConfig, CircleConfig, TextConfig, LineConfig } from '../../types'
 import { RectConfig } from 'konva/lib/shapes/Rect'
 
 const CONFIG_SYMBOL = Symbol('map-real-global-config')

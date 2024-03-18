@@ -1,4 +1,4 @@
-import type { Resources, TWorker, Vector2D, WorkerDocument, WorkerDocumentActive } from "./types";
+import type { Resources, TWorker, Vector2D, WorkerDocument, WorkerDocumentActive } from "../../types";
 
 export const isResources = (data: any): data is Resources => {
   return data.Location && data.Worker;
@@ -11,7 +11,7 @@ export const isActiveWorker = (w: WorkerDocument): w is WorkerDocumentActive => 
   return !!(p && p.global && p.local && p.local.length > 0);
 };
 
-export const getWorkerLocalPath = (w: WorkerDocumentActive, mapCenter: Vector2D, scaleFactor: number) => {
+export const getWorkerLocalPath = (w: WorkerDocumentActive, mapCenter: Vector2D, scaleFactor: number = 32) => {
 
   if (!w.type_specific.location.path_plan) throw new Error("경로가 없습니다");
   return w.type_specific.location.path_plan.local.map((p) => {
@@ -21,7 +21,7 @@ export const getWorkerLocalPath = (w: WorkerDocumentActive, mapCenter: Vector2D,
     };
   });
 };
-export const getWorkerGlobalPath = (w: WorkerDocumentActive, mapCenter: Vector2D, scaleFactor: number) => {
+export const getWorkerGlobalPath = (w: WorkerDocumentActive, mapCenter: Vector2D, scaleFactor: number = 32) => {
   const pp = w.type_specific.location.path_plan;
   if (!pp || !pp.global) throw new Error("global 경로가 없습니다");
   return pp.global.map((p) => {

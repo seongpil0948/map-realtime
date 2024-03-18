@@ -1,5 +1,5 @@
 import { shallowRef } from "vue";
-import { ImgDict, ImgSrcDict } from "../types/resource";
+import { ImgDict, ImgSrcDict } from "../../../types/resource";
 
 
 export const STATIC_IMG_DICT = Object.freeze({

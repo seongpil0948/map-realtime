@@ -1,5 +1,5 @@
 import { getDefaultConfig } from "./config"
-import { Vector2D, Node, Stage, WorkerDocumentActive } from "./types"
+import { Vector2D, Node, Stage, WorkerDocumentActive } from "../../types"
 import { flat2D, getWorkerGlobalPath, getWorkerLocalPath } from "./utils"
 
 

@@ -1,3 +1,2 @@
-export * from './types';
-export * from './resource';
-export * from './worker';
+export * from './konva'
+export * from './resource'

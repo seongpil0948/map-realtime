@@ -4,10 +4,10 @@ import useImage from "./image"
 import { useWindowSize } from "@vueuse/core"
 import { getDefaultConfig, getMapSize } from "../config"
 import maps from "../../../mock/maps"
-import { CleanResources, CleanWorkerDoc, ImgDict, Resources, TWorker, Vector2D, WorkerDocument } from "../types/resource"
+import { CleanResources, CleanWorkerDoc, ImgDict, Resources, TWorker, Vector2D, WorkerDocument } from "../../../types/resource"
 import { calcPose2D } from "../utils"
 import { extractKonva } from "../konva"
-import { TextConfig } from "../types"
+import { TextConfig } from "../../../types"
 
 
 
