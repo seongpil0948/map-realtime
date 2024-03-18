@@ -166,7 +166,7 @@ const handleMouseOverCircle = (e: EvtMouseOver) => {
   console.log("handleMouseOverCircle circle: ", e);
   const xy = { x: e.target.x(), y: e.target.y() };
   tooltipConfig.x = xy.x;
-  tooltipConfig.y = xy.y - 10;
+  tooltipConfig.y = xy.y;
   tooltipConfig.text = "x: " + xy.x + ", y: " + xy.y;
 
   tootipBgConfig.x = xy.x;
