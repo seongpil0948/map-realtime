@@ -49,17 +49,13 @@ export default function useMap(props: {
 
   const zoomIn = () => {
     const { stage } = extractKonva(stageRef)
-    // const scale = stage.scaleX()
+    const scale = stage.scaleX()
     const center = getCenter()
-    stage.position({ x: 0, y: 0 })
-    stage.offset({ x: center.x / 2, y: center.y / 2 })
-    // stage.scale({ x: scale * 2, y: scale * 2 })
-
-    // stage.position({x: center.x, y: center.y})
-    // stage.offset({x: center.x, y: center.y})
-    // if(scale !== 1){
-    //   stage.scale({x: scale, y: scale})
-    // }
+    stage.position({ x: center.x, y: center.y })
+    stage.offset({ x: center.x, y: center.y })
+    if (scale !== 1) {
+      stage.scale({ x: scale, y: scale })
+    }
   }
   onMounted(() => {
     zoomIn()

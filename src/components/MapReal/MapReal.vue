@@ -81,7 +81,6 @@ const {
   },
 });
 const configKonva: PStageConfig = getStageConfig(props, windowSize);
-
 const configResource = getMqttConfig();
 const topics = topicsByHost(configResource.host);
 const { ignite } = useMqtt<Resources | TWorker, typeof topics>({
@@ -196,10 +195,6 @@ const handleMouseOutCircle = (e: EvtMouseOut) => {
   // hide tooltip
   tooltipConfig.text = "";
   tootipBgConfig.opacity = 0;
-};
-
-const handleWorkerChange = (e: any) => {
-  console.log("handleWorkerChange", e);
 };
 
 watch(

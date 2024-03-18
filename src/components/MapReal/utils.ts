@@ -14,11 +14,9 @@ export const isActiveWorker = (w: WorkerDocument): w is WorkerDocumentActive => 
 export const getWorkerLocalPath = (w: WorkerDocumentActive, mapCenter: Vector2D) => {
   if (!w.type_specific.location.path_plan) throw new Error("경로가 없습니다");
   return w.type_specific.location.path_plan.local.map((p) => {
-    // FIXME: remove mock scale
-    const MOCK_LENGTH = 50;
     return {
-      x: mapCenter.x + p.x * MOCK_LENGTH,
-      y: mapCenter.y + p.y * MOCK_LENGTH,
+      x: mapCenter.x + p.x,
+      y: mapCenter.y + p.y,
     };
   });
 };
@@ -26,11 +24,9 @@ export const getWorkerGlobalPath = (w: WorkerDocumentActive, mapCenter: Vector2D
   const pp = w.type_specific.location.path_plan;
   if (!pp || !pp.global) throw new Error("global 경로가 없습니다");
   return pp.global.map((p) => {
-    // FIXME: remove mock scale
-    const MOCK_LENGTH = 50;
     return {
-      x: mapCenter.x + p.x * MOCK_LENGTH,
-      y: mapCenter.y + p.y * MOCK_LENGTH,
+      x: mapCenter.x + p.x,
+      y: mapCenter.y + p.y,
     };
   });
 };
