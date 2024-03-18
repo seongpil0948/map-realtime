@@ -11,24 +11,23 @@ export const isActiveWorker = (w: WorkerDocument): w is WorkerDocumentActive => 
   return !!(p && p.global && p.local && p.local.length > 0);
 };
 
-const MOCK_LEN = 50
-export const getWorkerLocalPath = (w: WorkerDocumentActive, mapCenter: Vector2D) => {
+export const getWorkerLocalPath = (w: WorkerDocumentActive, mapCenter: Vector2D, scaleFactor: number) => {
 
   if (!w.type_specific.location.path_plan) throw new Error("경로가 없습니다");
   return w.type_specific.location.path_plan.local.map((p) => {
     return {
-      x: mapCenter.x + p.x * (MOCK_LEN / 5),
-      y: mapCenter.y + p.y * MOCK_LEN * 1.5,
+      x: mapCenter.x + p.x * (scaleFactor / 5),
+      y: mapCenter.y + p.y * scaleFactor * 1.5,
     };
   });
 };
-export const getWorkerGlobalPath = (w: WorkerDocumentActive, mapCenter: Vector2D) => {
+export const getWorkerGlobalPath = (w: WorkerDocumentActive, mapCenter: Vector2D, scaleFactor: number) => {
   const pp = w.type_specific.location.path_plan;
   if (!pp || !pp.global) throw new Error("global 경로가 없습니다");
   return pp.global.map((p) => {
     return {
-      x: mapCenter.x + p.x * (MOCK_LEN / 5),
-      y: mapCenter.y + p.y * MOCK_LEN * 1.5,
+      x: mapCenter.x + p.x * (scaleFactor / 5),
+      y: mapCenter.y + p.y * scaleFactor * 1.5,
     };
   });
 };

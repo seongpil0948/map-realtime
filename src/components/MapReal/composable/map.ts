@@ -32,18 +32,14 @@ export default function useMap(props: {
   const changeEncodedMap = (targetValue: string) => {
     const targetEncodedMapCode = getMap(targetValue).encoded_map
     if (targetEncodedMapCode) {
-      mapImgRef.value = loadImage({ src: targetEncodedMapCode, width: mapSize.value.width, height: mapSize.value.height })
+      mapImgRef.value = loadImage({
+        src: targetEncodedMapCode,
+        width: mapSize.value.width,
+        height: mapSize.value.height
+      })
       if (stageRef.value) {
         zoomIn()
       }
-      // if (stageRef.value) {
-      //   const { stage } = extractKonva(stageRef)
-      //   // zoom in to center of image
-      //   const center = getCenter()
-      //   const scale = stage.scaleX()
-      //   stage.scale({ x: scale, y: scale })
-      //   stage.position(center)
-      // }
     }
   }
 
@@ -113,7 +109,6 @@ export default function useMap(props: {
       workerGroupRef.value.forEach((x) => {
         const n = x.getNode();
         const rect = n.getClientRect({ relativeTo: stageRef.value.getNode() });
-        // const rect = n.getClientRect();
         texts.push({
           ...getDefaultConfig.text(),
           ...{
