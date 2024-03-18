@@ -3,6 +3,7 @@ import { inject } from 'vue'
 import type { Props } from './props'
 import { IClientOptions } from 'mqtt'
 import type { WidthHeightRef, PStageConfig, CircleConfig, TextConfig, LineConfig } from './types'
+import { RectConfig } from 'konva/lib/shapes/Rect'
 
 const CONFIG_SYMBOL = Symbol('map-real-global-config')
 export const injectGlobalConfig = (app: App, config?: Props) => {
@@ -83,5 +84,14 @@ export const getDefaultConfig = {
     tension: 0.5,
     lineCap: "round",
     lineJoin: "round",
+  }),
+  rect: (): RectConfig => ({
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+    fill: 'black',
+    opacity: 0,
+    cornerRadius: 2,
   })
 }

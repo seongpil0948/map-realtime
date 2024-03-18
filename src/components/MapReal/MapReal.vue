@@ -33,6 +33,8 @@ import {
   isResources,
   isWorker,
 } from "./utils";
+import Konva from 'konva'
+import { RectConfig } from "konva/lib/shapes/Rect";
 
 const props = withDefaults(defineProps<Props>(), {
   ...getDefaultConfig.props(),
@@ -128,23 +130,42 @@ const handleMouseMove = (event: MouseEvent) => {
   setInfoText(mousePos.x + ", " + mousePos.y);
 };
 
+
+const tootipBgConfig = reactive<RectConfig>(getDefaultConfig.rect())
 const tooltipConfig = reactive<TextConfig>(getDefaultConfig.text());
+
+const getTootipSize = (config: TextConfig): { height: number, width: number } => {
+  const text = new Konva.Text({
+    text: config.text,
+  });
+  return { height: text.getHeight(), width: text.getWidth() };
+}
+
 const handleMouseOverCircle = (e: EvtMouseOver) => {
   console.log("handleMouseOverCircle circle: ", e);
   const xy = { x: e.target.x(), y: e.target.y() };
   tooltipConfig.x = xy.x;
   tooltipConfig.y = xy.y;
   tooltipConfig.text = "x: " + xy.x + ", y: " + xy.y;
+
+  tootipBgConfig.x = xy.x;
+  tootipBgConfig.y = xy.y;
+  tootipBgConfig.opacity = 0.3
+  tootipBgConfig.width = getTootipSize(tooltipConfig).width
+  tootipBgConfig.height = getTootipSize(tooltipConfig).height + 10
+
   for (let i = 0; i < lineConfigsGlobal.value.length; i++) {
     const gc = lineConfigsGlobal.value[i];
     if (!gc.points || gc.points.length < 1) continue;
     if (gc.points[0] === xy.x && gc.points[1] === xy.y) {
       tooltipConfig.text += "\n" + "global start";
+      tootipBgConfig.height += 15
     } else if (
       gc.points[gc.points.length - 2] === xy.x &&
       gc.points[gc.points.length - 1] === xy.y
     ) {
       tooltipConfig.text += "\n" + "global end";
+      tootipBgConfig.height += 15
     }
   }
 };
@@ -161,116 +182,79 @@ const getWorkerText = (w: CleanWorkerDoc): TextConfig => {
 };
 const handleMouseOutCircle = (e: EvtMouseOut) => {
   // hide tooltip
-  tooltipConfig.text = "";
+  tooltipConfig.text = ''
+  tootipBgConfig.opacity = 0
+};
+
+const handleWorkerChange = (e: any) => {
+  console.log("handleWorkerChange", e);
 };
 
 onMounted(() => {
   console.info(stageRef.value.getStage());
   console.info(stageRef.value.getNode());
 });
-const handleWorkerChange = (e: any) => {
-  console.log("handleWorkerChange", e);
-};
 </script>
 
 <template>
   <div>
-    <select
-      v-model="encodedMap"
-      name="encodedMap"
-      @change="changeEncodedMap(encodedMap)"
-    >
+    <select v-model="encodedMap" name="encodedMap" @change="changeEncodedMap(encodedMap)">
       <option v-for="map in maps" :key="map._id" :value="map.id">
         {{ map.name }}
       </option>
     </select>
   </div>
-  <v-stage
-    ref="stageRef"
-    :config="configKonva"
-    @dragstart="handleDragStart"
-    @dragend="handleDragEnd"
-    @drag="handleDrag"
-    @dragmove="handleDragMove"
-  >
+  <v-stage ref="stageRef" :config="configKonva" @dragstart="handleDragStart" @dragend="handleDragEnd" @drag="handleDrag"
+    @dragmove="handleDragMove">
     <v-layer>
-      <v-image
-        :config="{
-          image: mapImgRef,
-          x: mapSize.x,
-          y: mapSize.y,
-          draggable: false,
-        }"
-        @mousemove="handleMouseMove"
-        @mouseout="handleMouseOut"
-        @wheel="handleWheel"
-      />
-      <v-image
-        v-for="location in resources?.Location"
-        :key="location.id"
-        :config="{
-          image: location.image,
-          x: location.pose.x,
-          y: location.pose.y,
-          rotation: location.pose.theta,
-        }"
-      />
-      <v-group
-        v-for="worker in resources?.Worker"
-        :key="worker.id"
-        :config="{
-          x: worker.pose.x,
-          y: worker.pose.y,
-          rotation: worker.pose.theta,
-        }"
-      >
-        <v-image
-          @change="handleWorkerChange"
-          @imageChange="handleWorkerChange"
-          @imagechange="handleWorkerChange"
+      <v-image :config="{
+      image: mapImgRef,
+      x: mapSize.x,
+      y: mapSize.y,
+      draggable: false,
+    }" @mousemove="handleMouseMove" @mouseout="handleMouseOut" @wheel="handleWheel" />
+      <v-image v-for="location in resources?.Location" :key="location.id" :config="{
+      image: location.image,
+      x: location.pose.x,
+      y: location.pose.y,
+      rotation: location.pose.theta,
+    }" />
+      <v-group v-for="worker in resources?.Worker" :key="worker.id" :config="{
+      x: worker.pose.x,
+      y: worker.pose.y,
+      rotation: worker.pose.theta,
+    }">
+        <v-image @change="handleWorkerChange" @imageChange="handleWorkerChange" @imagechange="handleWorkerChange"
           :config="{
-            image: worker.image,
-            x: 0,
-            y: 0,
-            width: 30,
-            height: 20,
-            fill: 'violet',
-          }"
-        />
+      image: worker.image,
+      x: 0,
+      y: 0,
+      width: 30,
+      height: 20,
+      fill: 'violet',
+    }" />
         <v-text :config="getWorkerText(worker)"></v-text>
       </v-group>
-
       <!-- <v-shape ref="shapeRef" :config="shapeConfig" /> -->
-      <v-line
-        v-for="gc in lineConfigsGlobal"
-        :key="`${gc.x},${gc.y},global`"
-        :config="gc"
-      />
-      <v-line
-        v-for="lc in lineConfigsLocal"
-        :key="`${lc.x},${lc.y},local`"
-        :config="lc"
-      />
+      <v-line v-for="gc in lineConfigsGlobal" :key="`${gc.x},${gc.y},global`" :config="gc" />
+      <v-line v-for="lc in lineConfigsLocal" :key="`${lc.x},${lc.y},local`" :config="lc" />
       <!-- FIXME: don't use idx for key -->
-      <v-circle
-        v-for="(circleConfig, idx) in circleConfigs"
-        :key="idx"
-        :config="circleConfig"
-        @mouseover="handleMouseOverCircle"
-        @mouseout="handleMouseOutCircle"
-      ></v-circle>
+      <v-circle v-for="(circleConfig, idx) in circleConfigs" :key="idx" :config="circleConfig"
+        @mouseover="handleMouseOverCircle" @mouseout="handleMouseOutCircle"></v-circle>
 
-      <v-text
-        :config="{
-          ...getDefaultConfig.text(),
-          ...{
-            x: 10,
-            y: 10,
-            text: infoText,
-          },
-        }"
-      />
-      <v-text :config="tooltipConfig" />
+      <v-text :config="{
+      ...getDefaultConfig.text(),
+      ...{
+        x: 10,
+        y: 10,
+        text: infoText,
+      },
+    }" />
+      <!-- <v-text :config="tooltipConfig" /> -->
+      <v-group>
+        <v-rect :config="tootipBgConfig" />
+        <v-text :config="tooltipConfig" />
+      </v-group>
     </v-layer>
   </v-stage>
 </template>

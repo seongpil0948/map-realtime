@@ -1,7 +1,7 @@
 import { Ref, computed, onMounted, ref, shallowRef, watch } from "vue"
 import { getMap } from "../../../mock/api"
 import useImage from "./image"
-import { useWindowSize } from "@vueuse/core"
+import {  useWindowSize } from "@vueuse/core"
 import { getMapSize } from "../config"
 import maps from "../../../mock/maps"
 import { CleanResources, CleanWorkerDoc, ImgDict, Resources, TWorker, Vector2D, WorkerDocument } from "../types/resource"
@@ -30,6 +30,9 @@ export default function useMap(props: {
     const targetEncodedMapCode = getMap(targetValue).encoded_map
     if (targetEncodedMapCode) {
       mapImgRef.value = loadImage({ src: targetEncodedMapCode, width: mapSize.value.width, height: mapSize.value.height })
+      if(stageRef.value){
+        zoomIn()
+      }
       // if (stageRef.value) {
       //   const { stage } = extractKonva(stageRef)
       //   // zoom in to center of image
@@ -43,11 +46,17 @@ export default function useMap(props: {
 
   const zoomIn = () => {
     const { stage } = extractKonva(stageRef)
-    const scale = stage.scaleX()
+    // const scale = stage.scaleX()
     const center = getCenter()
     stage.position({ x: 0, y: 0 })
-    stage.offset({ x: center.x / 2, y: center.y / 2 })
-    // stage.scale({ x: scale * 1.1, y: scale * 1.1 })
+    stage.offset({ x: center.x / 2, y: center.y / 2 }) 
+    // stage.scale({ x: scale * 2, y: scale * 2 })
+
+    // stage.position({x: center.x, y: center.y})
+    // stage.offset({x: center.x, y: center.y})
+    // if(scale !== 1){
+    //   stage.scale({x: scale, y: scale})
+    // }
   }
   onMounted(() => {
     zoomIn()
