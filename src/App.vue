@@ -1,10 +1,7 @@
-<script setup lang="ts">
-
-
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div>
-    <map-real></map-real>
+    <WorkerMap />
   </div>
 </template>

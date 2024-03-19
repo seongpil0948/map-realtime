@@ -3,7 +3,7 @@ import type { NodeConfig, Node } from 'konva/lib/Node'
 export type { NodeConfig, Node }
 import type { StageConfig, Stage } from 'konva/lib/Stage'
 
-type PStageConfig = Omit<StageConfig, 'container'>
+type PStageConfig = ContainerConfig
 export type { StageConfig, Stage, PStageConfig }
 export type { Image, ImageConfig } from 'konva/lib/shapes/Image'
 export type { Shape, ShapeConfig, ShapeConfigHandler } from 'konva/lib/Shape'
@@ -14,6 +14,7 @@ export type { Label, LabelConfig } from 'konva/lib/shapes/Label'
 export type { Group, GroupConfig } from 'konva/lib/Group'
 
 import type { KonvaEventObject } from 'konva/lib/Node'
+import { ContainerConfig } from 'konva/lib/Container'
 export type { KonvaEventListener } from 'konva/lib/Node'
 export type EvtMouseMove = KonvaEventObject<GlobalEventHandlersEventMap['mousemove']>
 export type EvtMouseOver = KonvaEventObject<GlobalEventHandlersEventMap['mouseover']>

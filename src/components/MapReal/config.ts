@@ -1,6 +1,6 @@
 import type { App } from 'vue'
 import { inject } from 'vue'
-import type { Props } from './props'
+import type { Props } from '../WorkerMap/props'
 import { IClientOptions } from 'mqtt'
 import type { WidthHeightRef, PStageConfig, CircleConfig, TextConfig, LineConfig } from '../../types'
 import { RectConfig } from 'konva/lib/shapes/Rect'
@@ -19,8 +19,10 @@ export const getStageConfig = (mapProps: Props, windowSize: WidthHeightRef): PSt
     width: width.value,
     height: height.value,
     draggable: true,
-    scaleX: mapProps.scale,
-    scaleY: mapProps.scale,
+    scaleX: 1,
+    scaleY: 1,
+    // scaleX: mapProps.scale,
+    // scaleY: mapProps.scale,
   }
 }
 
@@ -44,6 +46,7 @@ export const topicsByHost = (host: string) => {
 }
 
 export const getMqttConfig = (): IClientOptions & { host: string } => ({
+
   clientId: 'client-' + Math.random().toString(16).substring(2, 8),
   host: '192.168.0.101',
   port: 15675,
@@ -53,7 +56,6 @@ export const getMqttConfig = (): IClientOptions & { host: string } => ({
 
 export const getDefaultConfig = {
   props: (): Props => Object.freeze<Props>({
-    scale: 1.5,
     canvasStyle: {
       width: '100%',
       height: '100%',

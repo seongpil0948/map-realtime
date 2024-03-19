@@ -306,4 +306,4 @@ watch(
     </v-layer>
   </v-stage>
 </template>
-../../../mock/resources../../../mock/maps ../../types
+../../../mock/resources../../../mock/maps ../../types ../WorkerMap/props
