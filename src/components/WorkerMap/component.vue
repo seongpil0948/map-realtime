@@ -33,31 +33,35 @@ const pathPlanLocal = shallowRef<CircleConfig[]>([]);
 const pathPlanGlobalCircle = shallowRef<CircleConfig[]>([]);
 const pathPlanGlobalLine = shallowRef<LineConfig[]>([]);
 const workerImgConfigs = shallowRef<ImageConfig[]>([]);
+
 fetchResources().then(async (resources) => {
   const staticImgs = await loadStaticImages();
   // workers.value = resources.Worker.map(refineWorker);
   if (!staticImgs) throw new Error("staticImgs is not loaded");
   else if (!mTool.value) throw new Error("mTool is not loaded");
+
   for (let i = 0; i < resources.Worker.length; i++) {
-    const w = resources.Worker[i];
-    const t = w.type_specific.location.pose2d;
-    const o = mTool.value.transformPointM2PX(t);
-    if (!o) throw new Error("mTool is not loaded");
+    const worker = resources.Worker[i];
+    const workerPosition = worker.type_specific.location.pose2d;
+    const m2px2DPosition = mTool.value.transformPointM2PX(workerPosition);
+    if (!m2px2DPosition) throw new Error("mTool is not loaded");
+
     const image =
-      w["status"] === "idle"
+      worker["status"] === "idle"
         ? staticImgs["workerIdle"]
         : staticImgs["workerBusy"];
-    const robotLength = w.type_specific.robot_info.length || 0.51;
-    const robotWidth = w.type_specific.robot_info.width || 0.73;
+    const robotLength = worker.type_specific.robot_info.length || 0.51;
+    const robotWidth = worker.type_specific.robot_info.width || 0.73;
 
     const width = Math.round(robotWidth * mTool.value.M2PX);
     const length = Math.round(robotLength * mTool.value.M2PX);
+
     workerImgConfigs.value.push({
-      id: w.id,
+      id: worker.id,
       image,
-      x: o.x,
-      y: o.y,
-      rotation: MapTools.thetaToDegree(t.theta),
+      x: m2px2DPosition.x,
+      y: m2px2DPosition.y,
+      rotation: MapTools.thetaToDegree(workerPosition.theta),
       offset: {
         y: width / 2,
         x: length / 2,
@@ -65,11 +69,13 @@ fetchResources().then(async (resources) => {
       stroke: "orange",
       strokeWidth: 0,
     });
-    const sr = ["#EEF5FC", "#CEE1F7", "#5194E3"];
-    const ir = "#C4D9F7";
-    const ci = "#0069FF";
+
+    const randomCircleColor = ["#EEF5FC", "#CEE1F7", "#5194E3"];
+    const lineColor = "#C4D9F7";
+    const circleColor = "#0069FF";
+
     pathPlanLocal.value = [];
-    const ppl = w.type_specific.location.path_plan?.local;
+    const ppl = worker.type_specific.location.path_plan?.local;
     console.info("pathPlanLocal: ", ppl);
     if (ppl) {
       for (let j = 0; j < ppl.length; j++) {
@@ -79,45 +85,47 @@ fetchResources().then(async (resources) => {
           x: pos.x,
           y: pos.y,
           radius: 2,
-          fill: ci,
-          stroke: ci,
+          fill: circleColor,
+          stroke: circleColor,
           strokeWidth: 1,
           opacity: 0.85,
         };
         pathPlanLocal.value.push(config);
       }
     }
+
     pathPlanGlobalCircle.value = [];
     pathPlanGlobalLine.value = [];
-    const e = w.type_specific.location.path_plan?.global;
-    console.info("pathPlanGlobal: ", e);
-    if (e) {
-      const t: number[] = [];
-      for (let j = 0; j < e.length; j++) {
-        const u = e[j];
-        const l = mTool.value.transformPointM2PX(u);
-        t.push(l.x), t.push(l.y);
+    const ppg = worker.type_specific.location.path_plan?.global;
+    console.info("pathPlanGlobal: ", ppg);
+
+    if (ppg) {
+      const globalPath: number[] = [];
+      for (let i = 0; i < ppg.length; i++) {
+        const p = ppg[i];
+        const pos = mTool.value.transformPointM2PX(p);
+        globalPath.push(pos.x), globalPath.push(pos.y);
       }
-      const o: LineConfig = {
-        points: t,
-        stroke: ir,
+      const eachGlobalPath: LineConfig = {
+        points: globalPath,
+        stroke: lineColor,
         strokeWidth: 4,
         opacity: 0.35,
       };
-      pathPlanGlobalLine.value.push(o);
+      pathPlanGlobalLine.value.push(eachGlobalPath);
 
-      const a = e[e.length - 1];
-      const r = mTool.value.transformPointM2PX(a);
+      const movingGPath = ppg[ppg.length - 1];
+      const eachMovingGPointPosition = mTool.value.transformPointM2PX(movingGPath);
 
-      for (let u2 = 0; u2 < 3; u2++) {
-        const l: CircleConfig = {
-          x: r.x,
-          y: r.y,
-          radius: 12 - u2 * 4,
-          fill: sr[u2],
+      for (let i = 0; i < 3; i++) {
+        const eachGlobalPathPoint: CircleConfig = {
+          x: eachMovingGPointPosition.x,
+          y: eachMovingGPointPosition.y,
+          radius: 12 - i * 4,
+          fill: randomCircleColor[i],
           opacity: 0.75,
         };
-        pathPlanGlobalCircle.value.push(l);
+        pathPlanGlobalCircle.value.push(eachGlobalPathPoint);
       }
     }
   }
@@ -166,44 +174,26 @@ const { dispose } = ignite();
       <v-layer>
         <v-image :config="mapImage" />
 
-        <v-image
-          v-for="workerConfig in workerImgConfigs"
-          :key="workerConfig.id"
-          :config="workerConfig"
-        />
+        <v-image v-for="workerConfig in workerImgConfigs" :key="workerConfig.id" :config="workerConfig" />
         <v-group>
-          <v-circle
-            v-for="circleConfig in pathPlanLocal"
-            :key="circleConfig.id"
-            :config="circleConfig"
-          />
+          <v-circle v-for="circleConfig in pathPlanLocal" :key="circleConfig.id" :config="circleConfig" />
         </v-group>
         <v-group>
-          <v-circle
-            v-for="circleConfig in pathPlanGlobalCircle"
-            :key="circleConfig.id"
-            :config="circleConfig"
-          />
-          <v-line
-            v-for="lineConfig in pathPlanGlobalLine"
-            :key="lineConfig.id"
-            :config="lineConfig"
-          />
+          <v-circle v-for="circleConfig in pathPlanGlobalCircle" :key="circleConfig.id" :config="circleConfig" />
+          <v-line v-for="lineConfig in pathPlanGlobalLine" :key="lineConfig.id" :config="lineConfig" />
           <!-- global -->
           <v-group> </v-group>
         </v-group>
-        <v-text
-          :config="{
-            ...factory.konva.text(),
-            ...{
-              x: 10,
-              y: 10,
-              offsetX: -1000,
-              offsetY: -600,
-              text: infoText,
-            },
-          }"
-        />
+        <v-text :config="{
+        ...factory.konva.text(),
+        ...{
+          x: 10,
+          y: 10,
+          offsetX: -1000,
+          offsetY: -600,
+          text: infoText,
+        },
+      }" />
       </v-layer>
     </v-stage>
   </div>
@@ -217,6 +207,7 @@ const { dispose } = ignite();
   padding: 0;
   overflow: hidden;
 }
+
 .select-container {
   position: fixed;
   top: 10px;
