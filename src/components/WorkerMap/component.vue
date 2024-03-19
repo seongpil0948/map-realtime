@@ -2,11 +2,17 @@
 import useKonva from "./composables/konva";
 import useMap from "./composables/map";
 import { fetchResources } from "../../mock/api";
-import { CircleConfig, ImageConfig, LineConfig } from "../../types";
+import {
+  CircleConfig,
+  ImageConfig,
+  LineConfig,
+  Resources,
+  TWorker,
+} from "../../types";
 import { ref, shallowRef } from "vue";
-import { thetaToDegree } from "../MapReal/utils";
 import { useMqtt } from "./composables/mqtt";
 import factory from "./utils/factory";
+import MapTools, { isResources, isWorker } from "./utils/map";
 
 const { stageConfig, stageRef, getStage } = useKonva();
 const { mapAll, mapId, mapImage, loadStaticImages, mTool } = useMap({});
@@ -51,7 +57,7 @@ fetchResources().then(async (resources) => {
       image,
       x: o.x,
       y: o.y,
-      rotation: thetaToDegree(t.theta),
+      rotation: MapTools.thetaToDegree(t.theta),
       offset: {
         y: width / 2,
         x: length / 2,
@@ -119,6 +125,33 @@ fetchResources().then(async (resources) => {
   console.info("pathPlan: ", pathPlanLocal.value);
 });
 // <<< temp <<<
+
+const topics = Object.freeze(["hello", "worker"] as const);
+const { ignite } = useMqtt<Resources | TWorker, typeof topics>({
+  config: {
+    clientId: "client-" + Math.random().toString(16).substring(2, 8),
+    host: "192.168.0.101",
+    port: 15675,
+    username: "admin",
+    password: "0525",
+  },
+  topics,
+  onMessage(topic, message) {
+    console.log("토픽 `" + topic + "`에서 메시지 수신:", message);
+    if (topic === "hello") {
+      if (isResources(message)) {
+        // setResources(message)
+        console.info("리소스당!");
+      } else throw new Error("올바르지 않은 메시지 형식입니다");
+    } else if (topic === "worker") {
+      if (isWorker(message)) {
+        // updateWorker(message);
+        console.info("워커당!");
+      } else throw new Error("올바르지 않은 메시지 형식입니다");
+    }
+  },
+});
+const { dispose } = ignite();
 </script>
 <template>
   <div id="worker-map-root">

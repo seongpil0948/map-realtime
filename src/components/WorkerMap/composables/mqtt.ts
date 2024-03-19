@@ -38,6 +38,12 @@ export function useMqtt<Message, Topics extends readonly [string, string] = ['re
       console.error("MQTT 연결 오류 :", err)
     })
 
+    client.on('offline', () => {
+      console.log('MQTT 브로커와 연결이 끊어졌습니다(오프라인).');
+    })
+
+
+
     client.on('message', (topic, msg) => {
       try {
         onMessage(topic as Topics[number], JSON.parse(msg.toString()));
