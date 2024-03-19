@@ -1,18 +1,20 @@
 import { useWindowSize } from "@vueuse/core";
 import { computed, onMounted, ref } from "vue";
-import type { PStageConfig, Stage } from "../../../types";
+import type { Stage, StageConfig } from "../../../types";
 import { extractStage } from "../utils/konva";
 
 export default function () {
   const windowSize = useWindowSize()
   const stageRef = ref(null);
 
-  const stageConfig = computed<PStageConfig>(() => ({
+  const stageConfig = computed<StageConfig>(() => ({
+    container: 'app',
     width: windowSize.width.value,
     height: windowSize.height.value,
     draggable: true,
-    offsetX: -(windowSize.width.value / 2),
-    offsetY: (windowSize.height.value / 4),
+    // FIXME(가라): 원래는 없음
+    offsetX: (windowSize.width.value / 4),
+    offsetY: (windowSize.height.value / 2),
   }))
 
   const getCenter = (stage: Stage) => {
@@ -22,8 +24,9 @@ export default function () {
     }
   }
 
+  const getStage = () => extractStage(stageRef)
   const zoomIn = () => {
-    const stage = extractStage(stageRef);
+    const stage = getStage()
     // const center = getCenter(stage)
     // stage.position({ x: center.x, y: center.y })
     // stage.offsetY(center.y * 2)
@@ -34,7 +37,7 @@ export default function () {
   }
 
   onMounted(() => {
-    const stage = extractStage(stageRef);
+    const stage = getStage()
     console.log(stage);
   });
 
@@ -42,6 +45,7 @@ export default function () {
     stageConfig,
     stageRef,
     getCenter,
-    zoomIn
+    zoomIn,
+    getStage
   }
 } 

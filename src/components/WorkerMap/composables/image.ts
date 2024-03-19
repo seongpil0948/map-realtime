@@ -27,15 +27,19 @@ export default function useImage() {
     console.log(m)
     const imgConfig: ImageConfig = {
       name: "map-image",
-      width: m.width_gm, height, scaleY: -1,
-      offsetY: height,
-      offsetX: m.origin_px,
+      width: m.width_gm,
+      height: height,
+      scaleY: -1,
+      // // FIXME(가라) 원래는 height
+      offsetY: height * 1.2,
+      // offsetX: m.origin_px,
       image: image,
     }
     return imgConfig
   }
 
   const loadStaticImages = async (): Promise<ImgDict> => new Promise((resolve) => {
+    if (staticImgs.value && Object.keys(staticImgs.value).length > 0) return resolve(staticImgs.value as ImgDict)
     const sources: ImgSrcDict = STATIC_IMG_DICT;
     if (!staticImgs.value) staticImgs.value = {} as ImgDict;
 
@@ -56,10 +60,9 @@ export default function useImage() {
       staticImgs.value![k].src = assetDir + sources[k];
     }
   })
-
+  loadStaticImages()
 
   return {
-    staticImgs,
     loadMapImage,
     loadStaticImages,
 

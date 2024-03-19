@@ -71,6 +71,7 @@ export interface WorkerSpecific {
     size_center_to_left: number
     size_center_to_right: number
     model: string
+    length?: number
   }
   battery: {
     battery_level: number
@@ -111,7 +112,7 @@ export type TWorker = {
   document: WorkerDocument
   operation: string
 }
-export type CleanWorkerDoc = WorkerDocument & {
+export type WorkerDocRefined = WorkerDocument & {
   image: HTMLImageElement
   pose: Pose
 }
@@ -122,11 +123,12 @@ export type Resources = {
   TeleporterGate: ResourcesTeleporterGate[],
   Marker: ResourcesMarker[],
   AutodoorExt: ResourcesAutodoorExt[],
-  Worker: WorkerDocument[]
 }
+export type API_WORKERS_DATA = WorkerDocument[]
+
 export interface CleanResources extends Resources {
   Location: LocationClean[]
-  Worker: CleanWorkerDoc[]
+  Worker: WorkerDocRefined[]
 }
 
 export type Pose = Vector2DTheta

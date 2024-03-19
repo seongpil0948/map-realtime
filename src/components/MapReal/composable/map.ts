@@ -4,7 +4,7 @@ import useImage from "./image"
 import { useWindowSize } from "@vueuse/core"
 import { getDefaultConfig, getMapSize } from "../config"
 import maps from "../../../mock/maps"
-import { CleanResources, CleanWorkerDoc, ImgDict, Resources, TWorker, Vector2D, WorkerDocument } from "../../../types/resource"
+import { CleanResources, WorkerDocRefined, ImgDict, Resources, TWorker, Vector2D, WorkerDocument } from "../../../types/resource"
 import { calcPose2D } from "../utils"
 import { extractKonva } from "../konva"
 import { TextConfig } from "../../../types"
@@ -14,7 +14,7 @@ import { TextConfig } from "../../../types"
 export default function useMap(props: {
   getInitialResources: () => Promise<Resources>
   stageRef: Ref<any>
-  handleUpdateWorker: (worker: CleanWorkerDoc) => void
+  handleUpdateWorker: (worker: WorkerDocRefined) => void
   handleUpdateResources: () => void
 }) {
   const { stageRef, handleUpdateResources, handleUpdateWorker } = props
@@ -91,7 +91,7 @@ export default function useMap(props: {
     y: mapSize.value.height / 2
   })
 
-  const refineWorker = (doc: WorkerDocument): CleanWorkerDoc => {
+  const refineWorker = (doc: WorkerDocument): WorkerDocRefined => {
     if (!loadedImages.value) throw new Error('loadedImages is not loaded')
     const w = {
       ...doc,

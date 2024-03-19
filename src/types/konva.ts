@@ -2,9 +2,7 @@ export type { LayerConfig, Layer } from 'konva/lib/Layer'
 import type { NodeConfig, Node } from 'konva/lib/Node'
 export type { NodeConfig, Node }
 import type { StageConfig, Stage } from 'konva/lib/Stage'
-
-type PStageConfig = ContainerConfig
-export type { StageConfig, Stage, PStageConfig }
+export type { StageConfig, Stage }
 export type { Image, ImageConfig } from 'konva/lib/shapes/Image'
 export type { Shape, ShapeConfig, ShapeConfigHandler } from 'konva/lib/Shape'
 export type { Circle, CircleConfig } from 'konva/lib/shapes/Circle'
