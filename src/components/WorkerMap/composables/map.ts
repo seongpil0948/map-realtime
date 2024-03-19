@@ -30,12 +30,10 @@ export default function (p: UseMapProps) {
   })
 
   watch(() => mapId.value, (id, prevId) => {
-    console.log(mapAll.value)
     if (!id || !mapAll.value) {
       mapImage.value = undefined
       return
     } else if (prevId === id) return
-    console.count(`mapId changed to ${id} from ${prevId}`)
     const mapData = getCurrentMap()
 
     p.onUpdateMap && p.onUpdateMap(mapData)

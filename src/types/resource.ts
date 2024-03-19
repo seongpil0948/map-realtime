@@ -123,6 +123,7 @@ export type Resources = {
   TeleporterGate: ResourcesTeleporterGate[],
   Marker: ResourcesMarker[],
   AutodoorExt: ResourcesAutodoorExt[],
+  Worker: API_WORKERS_DATA
 }
 export type API_WORKERS_DATA = WorkerDocument[]
 
