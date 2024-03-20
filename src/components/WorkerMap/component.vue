@@ -16,7 +16,11 @@ const {
   pathPlanGlobalLine,
   workerImgConfigs,
   markerImgConfigs,
+  locationImgConfigs,
+  setResources,
+  handleUpdateWorker
 } = useResources({ mTool });
+
 const infoText = ref<string>("");
 const setInfoText = (message: string) => {
   infoText.value = message;
@@ -40,21 +44,21 @@ const { ignite } = useMqtt<Resources | TWorker, typeof topics>({
   },
   topics,
   onMessage(topic, message) {
-    console.log("토픽 `" + topic + "`에서 메시지 수신:", message);
     if (topic === "hello") {
       if (isResources(message)) {
-        // setResources(message)
-        console.info("리소스당!");
+        setResources(message)
       } else throw new Error("올바르지 않은 메시지 형식입니다");
     } else if (topic === "worker") {
       if (isWorker(message)) {
-        // updateWorker(message);
-        console.info("워커당!");
+        handleUpdateWorker(message.document)
       } else throw new Error("올바르지 않은 메시지 형식입니다");
     }
   },
-});
+})
+
 const { dispose } = ignite();
+
+
 </script>
 <template>
   <div id="worker-map-root">
@@ -69,47 +73,27 @@ const { dispose } = ignite();
       <v-layer>
         <v-image :config="mapImage" />
 
-        <v-image
-          v-for="workerConfig in workerImgConfigs"
-          :key="workerConfig.id"
-          :config="workerConfig"
-        />
-        <v-image
-          v-for="markerImgConfig in markerImgConfigs"
-          :key="markerImgConfig.id"
-          :config="markerImgConfig"
-        />
+        <v-image v-for="workerConfig in workerImgConfigs" :key="workerConfig.id" :config="workerConfig" />
+        <v-image v-for="markerImgConfig in markerImgConfigs" :key="markerImgConfig.id" :config="markerImgConfig" />
+        <v-image v-for="locationImgConfig in locationImgConfigs" :key="locationImgConfig.id"
+          :config="locationImgConfig" />
         <v-group>
-          <v-circle
-            v-for="circleConfig in pathPlanLocal"
-            :key="circleConfig.id"
-            :config="circleConfig"
-          />
+          <v-circle v-for="circleConfig in pathPlanLocal" :key="circleConfig.id" :config="circleConfig" />
         </v-group>
         <v-group>
-          <v-circle
-            v-for="circleConfig in pathPlanGlobalCircle"
-            :key="circleConfig.id"
-            :config="circleConfig"
-          />
-          <v-line
-            v-for="lineConfig in pathPlanGlobalLine"
-            :key="lineConfig.id"
-            :config="lineConfig"
-          />
+          <v-circle v-for="circleConfig in pathPlanGlobalCircle" :key="circleConfig.id" :config="circleConfig" />
+          <v-line v-for="lineConfig in pathPlanGlobalLine" :key="lineConfig.id" :config="lineConfig" />
         </v-group>
-        <v-text
-          :config="{
-            ...factory.konva.text(),
-            ...{
-              x: 10,
-              y: 10,
-              offsetX: -1000,
-              offsetY: -600,
-              text: infoText,
-            },
-          }"
-        />
+        <v-text :config="{
+        ...factory.konva.text(),
+        ...{
+          x: 10,
+          y: 10,
+          offsetX: -1000,
+          offsetY: -600,
+          text: infoText,
+        },
+      }" />
       </v-layer>
     </v-stage>
   </div>
