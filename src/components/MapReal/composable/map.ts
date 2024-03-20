@@ -8,6 +8,7 @@ import { CleanResources, WorkerDocRefined, ImgDict, Resources, TWorker, Vector2D
 import { calcPose2D } from "../utils"
 import { extractKonva } from "../konva"
 import { TextConfig } from "../../../types"
+import { generateObjectLabel } from "../../WorkerMap/utils/konva"
 
 
 
@@ -106,21 +107,14 @@ export default function useMap(props: {
   const setWorkerTexts = () => {
     const texts: TextConfig[] = [];
     nextTick(() => {
+      if (!stageRef || !stageRef.value) return
       workerGroupRef.value.forEach((x) => {
-        const n = x.getNode();
-        const rect = n.getClientRect({ relativeTo: stageRef.value.getNode() });
-        texts.push({
-          ...getDefaultConfig.text(),
-          ...{
-            x: rect.x + rect.width / 4,
-            y: rect.y - 10,
-            text: "text",
-            fill: "red",
-            align: "center",
-          },
-        });
+        console.log("ref: ", x)
+        const tConfig = generateObjectLabel({ konvaEl: x, stageRef, place: "top", text: (node) => node.attrs.name });
+        texts.push(tConfig);
       });
       workerTexts.value = texts;
+      console.log(workerTexts.value)
     })
   };
 

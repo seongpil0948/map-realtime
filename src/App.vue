@@ -3,5 +3,6 @@
 <template>
   <div>
     <WorkerMap />
+    <!-- <map-real /> -->
   </div>
 </template>

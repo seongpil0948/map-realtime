@@ -5,8 +5,8 @@ import {
   EvtMouseOut,
   EvtMouseOver,
   LineConfig,
-  PStageConfig,
   Resources,
+  StageConfig,
   TWorker,
   TextConfig,
   WorkerDocumentActive,
@@ -72,7 +72,7 @@ const {
     handleWorkerChanged();
   },
 });
-const configKonva: PStageConfig = getStageConfig(props, windowSize);
+const configKonva: StageConfig = getStageConfig(props, windowSize);
 const configResource = getMqttConfig();
 const topics = topicsByHost(configResource.host);
 const { ignite } = useMqtt<Resources | TWorker, typeof topics>({
@@ -239,27 +239,23 @@ watch(
           rotation: location.pose.theta,
         }"
       />
-      <v-group
+
+      <v-image
         v-for="worker in resources?.Worker"
         :key="worker.id"
+        ref="workerGroupRef"
+        name="hi"
         :config="{
+          image: worker.image,
+          name: worker.name,
           x: worker.pose.x,
           y: worker.pose.y,
           rotation: worker.pose.theta,
+          width: 30,
+          height: 20,
+          fill: 'violet',
         }"
-        ref="workerGroupRef"
-      >
-        <v-image
-          :config="{
-            image: worker.image,
-            x: 0,
-            y: 0,
-            width: 30,
-            height: 20,
-            fill: 'violet',
-          }"
-        />
-      </v-group>
+      />
       <v-text
         v-for="(t, idx) in workerTexts"
         :key="`${t.text} ${idx}`"
@@ -306,4 +302,3 @@ watch(
     </v-layer>
   </v-stage>
 </template>
-../../../mock/resources../../../mock/maps ../../types ../WorkerMap/props
