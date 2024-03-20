@@ -1,5 +1,5 @@
 import { useWindowSize } from '@vueuse/core'
-import { ImgKeys } from '../components/MapReal/composable/image'
+import { ImgKeys } from '../components/WorkerMap/composables/image';
 
 export type Vector2D = { x: number; y: number }
 export type Vector3D = Vector2D & { z: number }

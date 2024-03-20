@@ -11,7 +11,7 @@ interface UseMapProps {
 export default function (p: UseMapProps) {
   const mapId = ref<string>()
   const mapAll = shallowRef<MapDataItem[]>()
-  const { loadMapImage, loadStaticImages } = useImage()
+  const { loadMapImage } = useImage()
   const mapImage = shallowRef<ImageConfig>()
 
   const getMaps = async () => {
@@ -53,7 +53,6 @@ export default function (p: UseMapProps) {
     mapId,
     mapAll,
     mapImage,
-    loadStaticImages
   }
 
 
