@@ -110,7 +110,7 @@ export default function useMap(props: {
       if (!stageRef || !stageRef.value) return
       workerGroupRef.value.forEach((x) => {
         console.log("ref: ", x)
-        const tConfig = generateObjectLabel({ konvaEl: x, stageRef, place: "top", text: (node) => node.attrs.name });
+        const tConfig = generateObjectLabel({ konvaEl: x, stageRef, place: "bottom", text: (node) => node.attrs.name });
         texts.push(tConfig);
       });
       workerTexts.value = texts;

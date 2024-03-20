@@ -67,8 +67,7 @@ export function generateObjectLabel(
   }
   else if (place === 'bottom') {
     return {
-      tConfig,
-      x: rect.x + rect.width / 4,
+      ...tConfig,
       y: rect.y + rect.height + distance,
     }
   }
