@@ -8,7 +8,7 @@ import factory from "./utils/factory";
 import { isResources, isWorker } from "./utils/map";
 import useResources from "./composables/resource";
 
-const { stageConfig, stageRef, getStage, getCenter } = useKonva();
+const { stageConfig, stageRef, getStage } = useKonva();
 const { mapAll, mapId, mapImage, mTool } = useMap({});
 const {
   pathPlanLocal,
@@ -17,6 +17,7 @@ const {
   workerImgConfigs,
   markerImgConfigs,
   locationImgConfigs,
+  zoneLineConfigs,
   setResources,
   handleUpdateWorker
 } = useResources({ mTool });
@@ -77,6 +78,7 @@ const { dispose } = ignite();
         <v-image v-for="markerImgConfig in markerImgConfigs" :key="markerImgConfig.id" :config="markerImgConfig" />
         <v-image v-for="locationImgConfig in locationImgConfigs" :key="locationImgConfig.id"
           :config="locationImgConfig" />
+        <v-line v-for="zoneLineConfig in zoneLineConfigs" :key="zoneLineConfig.id" :config="zoneLineConfig" />
         <v-group>
           <v-circle v-for="circleConfig in pathPlanLocal" :key="circleConfig.id" :config="circleConfig" />
         </v-group>

@@ -10,6 +10,9 @@ export const STATIC_IMG_DICT = Object.freeze({
   "workerBusy": 'worker-busy.svg',
   "Marker": 'marker_front.svg',
   "Zone": "zone.svg",
+  "ZoneProhibit": "zone_prohibit.svg",
+  "ZonePreferred": "zone_preferred.svg",
+  "ZoneUnPreferred": "zone_unpreferred.svg",
   "Location": "location.svg",
 });
 export type ImgKeys = keyof typeof STATIC_IMG_DICT;
