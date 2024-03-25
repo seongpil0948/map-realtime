@@ -47,6 +47,9 @@ const resourceLabels = computed(() => {
       stageRef,
       place: "bottom",
       text: (node) => node.attrs.name,
+      textConfig: {
+        offsetX: 20,
+      },
     });
     texts.push(tConfig);
   });
@@ -56,6 +59,9 @@ const resourceLabels = computed(() => {
       stageRef,
       place: "center",
       text: (node) => node.attrs.name,
+      textConfig: {
+        offsetX: 20,
+      },
     });
     texts.push(tConfig);
   });

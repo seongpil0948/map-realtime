@@ -34,6 +34,11 @@ export function moveNode(node: Node, x: number, y: number) {
   });
 }
 
+// positionText
+// textOnPolygon
+// v.offsetX(v.width() / 2), v.offsetY(4);
+// E.offsetY(-10),
+// (a.degree + 360) % 360 > 190 ? -20 : -10
 export function generateObjectLabel({
   konvaEl,
   stageRef,
@@ -53,16 +58,45 @@ export function generateObjectLabel({
   const stage = extractStage(stageRef);
   const rect = node.getClientRect({ relativeTo: stage });
   console.log("node: ", node);
+  console.log("rect: ", rect);
+
   const tConfig: TextConfig = {
     ...factory.konva.text(),
     x: rect.x + rect.width / 2,
-    y: rect.y - distance,
+    y: rect.y,
     text: text(node),
     fill: "black",
-    align: "center",
+    align: "start",
     fontSize: 8,
     ...textConfig,
   };
+  // const getTextOffsetY = (theta: number) => {
+  //   const t = theta < 0 ? 6.28 + theta : theta;
+  //   let offset = -12;
+  //   if (t > 0 && t < 3.14) {
+  //     offset = 30;
+  //   }
+  //   return offset;
+  // };
+  if (node.attrs.rotation) {
+    // console.log(node.attrs?.name, node.attrs?.rotation, "generateObjectLabel", place);
+    let offsetY = 0;
+    const d = node.attrs.rotation;
+    if (place === "top") {
+      if (-10 > d && d > -180) {
+        offsetY = -40;
+      } else if (180 > d && d > 10) {
+        offsetY = +40;
+      } else {
+        offsetY = -15;
+      }
+    } else if (place === "bottom" && 180 > d && d > 350) {
+      offsetY = 5;
+    }
+    console.log("offsetY: ", offsetY);
+    // const offsetY = -getTextOffsetY(node.attrs.rotation * (Math.PI / 180));
+    tConfig.y! += offsetY;
+  }
   if (place === "top") {
     return tConfig;
   } else if (place === "bottom") {
