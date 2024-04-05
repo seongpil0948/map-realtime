@@ -2,8 +2,9 @@ import type { App } from 'vue'
 import { inject } from 'vue'
 import type { Props } from '../WorkerMap/props'
 import { IClientOptions } from 'mqtt'
-import type { WidthHeightRef, PStageConfig, CircleConfig, TextConfig, LineConfig } from '../../types'
+import type { WidthHeightRef, CircleConfig, TextConfig, LineConfig } from '../../types'
 import { RectConfig } from 'konva/lib/shapes/Rect'
+import { PStageConfig } from './types'
 
 const CONFIG_SYMBOL = Symbol('map-real-global-config')
 export const injectGlobalConfig = (app: App, config?: Props) => {
@@ -13,7 +14,7 @@ export const useGlobalConfig = () => {
   return inject<Props>(CONFIG_SYMBOL, {} as Props)
 }
 
-export const getStageConfig = (mapProps: Props, windowSize: WidthHeightRef): PStageConfig => {
+export const getStageConfig = ( windowSize: WidthHeightRef): PStageConfig => {
   const { width, height } = windowSize
   return {
     width: width.value,

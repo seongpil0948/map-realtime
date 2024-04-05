@@ -1,4 +1,3 @@
-import AES from "crypto-js/aes";
 import { ERequestCommand } from "../types";
 import { request } from "./request";
 import { useUserStore } from "../composables/user";

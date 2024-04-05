@@ -1,5 +1,5 @@
 import { shallowRef } from "vue";
-import { ImgDict, ImgSrcDict } from "../../../types/resource";
+import { ImgDict } from "../../../types/resource";
 
 
 export const STATIC_IMG_DICT = Object.freeze({
@@ -25,7 +25,7 @@ export default function useImage() {
   }
 
   const loadImages = (callback: (images: ImgDict) => void) => {
-    const sources: ImgSrcDict = STATIC_IMG_DICT;
+    const sources = STATIC_IMG_DICT;
     if (!images.value) images.value = {} as ImgDict;
 
     var assetDir = '/';

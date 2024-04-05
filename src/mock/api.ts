@@ -4,7 +4,7 @@ import MAP2 from './map-6448920773ee4a54330ac325'
 import MAP3 from './map-6448a41973ee4a54330af998'
 import MAP4 from './map-6448a44c73ee4a54330afa33'
 import MAP5 from './map-65e83bbc3772bfbd5267acd7'
-import mockResources from './resources'
+// import mockResources from './resources'
 import resourcesPathplan from './resources-pathplan'
 import workers from './workers'
 

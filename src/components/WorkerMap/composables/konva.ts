@@ -26,7 +26,7 @@ export default function () {
 
   const getStage = () => extractStage(stageRef)
   const zoomIn = () => {
-    const stage = getStage()
+    // const stage = getStage()
     // const center = getCenter(stage)
     // stage.position({ x: center.x, y: center.y })
     // stage.offsetY(center.y * 2)

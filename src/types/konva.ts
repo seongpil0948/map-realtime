@@ -12,7 +12,7 @@ export type { Label, LabelConfig } from 'konva/lib/shapes/Label'
 export type { Group, GroupConfig } from 'konva/lib/Group'
 
 import type { KonvaEventObject } from 'konva/lib/Node'
-import { ContainerConfig } from 'konva/lib/Container'
+// import { ContainerConfig } from 'konva/lib/Container'
 export type { KonvaEventListener } from 'konva/lib/Node'
 export type EvtMouseMove = KonvaEventObject<GlobalEventHandlersEventMap['mousemove']>
 export type EvtMouseOver = KonvaEventObject<GlobalEventHandlersEventMap['mouseover']>

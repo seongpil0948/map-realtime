@@ -1,10 +1,12 @@
 import { Ref } from "vue";
-import { Node, Stage, TextConfig, Vector2D } from "../../../types";
+import { Node, Stage, TextConfig} from "../../../types";
 import factory from "./factory";
 
 const isValidStage = (stage: any) => {
   // TODO(임규리): 무조건 stageRef만 들어올 수 있도록
-  return true;
+  if(stage){
+    return true;
+  }
 };
 export const extractStage = (stageRef: Ref<any>) => {
   if (!isValidStage(stageRef.value)) throw new Error("invalid stage");

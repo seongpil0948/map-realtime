@@ -2,7 +2,7 @@ import { Ref, computed, nextTick, onMounted, ref, shallowRef, watch } from "vue"
 import { getMap } from "../../../mock/api"
 import useImage from "./image"
 import { useWindowSize } from "@vueuse/core"
-import { getDefaultConfig, getMapSize } from "../config"
+import { getMapSize } from "../config"
 import maps from "../../../mock/maps"
 import { CleanResources, WorkerDocRefined, ImgDict, Resources, TWorker, Vector2D, WorkerDocument } from "../../../types/resource"
 import { calcPose2D } from "../utils"
@@ -146,7 +146,7 @@ export default function useMap(props: {
     console.log('resources.value', resources.value)
   }
 
-  watch(() => mapSize.value, (value) => {
+  watch(() => mapSize.value, () => {
     changeEncodedMap(encodedMap.value)
   }, {
     immediate: true

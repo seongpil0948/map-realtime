@@ -213,24 +213,24 @@ export default function (props: Props) {
 
     for (let idx = 0; idx < data.Marker.length; idx++) {
       const e = data.Marker[idx];
-      const lineTolerance = 0.003; // 0.5
       const pose = mTool.transformPoseM2PX(e.pose);
-      const parkingOffset = e.parking_offset;
-      const unparkDistance = e.unpark.distance;
-      const unparkBackward = e.unpark.backward;
-      const marker = e.marker_value;
-      const barrier = e.barrier;
-      const paramPose = e.param_point.pose;
-      const paramLandformType = e.param_point.landform.type;
-      const paramLandformMaxSpeed = e.param_point.landform.max_speed;
-      const paramLandformMaxAngularSpeed =
-        e.param_point.landform.max_angular_speed;
-      const gocartMarker = e.gocart_marker;
-      const chargeable = e.chargeable;
-      const chargerType = e.charger_type;
-      const tags = e.tags as any[];
-      const lineColor = "#000000";
-      const lineWidth = 0.048;
+      // const lineTolerance = 0.003; // 0.5
+      // const parkingOffset = e.parking_offset;
+      // const unparkDistance = e.unpark.distance;
+      // const unparkBackward = e.unpark.backward;
+      // const marker = e.marker_value;
+      // const barrier = e.barrier;
+      // const paramPose = e.param_point.pose;
+      // const paramLandformType = e.param_point.landform.type;
+      // const paramLandformMaxSpeed = e.param_point.landform.max_speed;
+      // const paramLandformMaxAngularSpeed =
+      //   e.param_point.landform.max_angular_speed;
+      // const gocartMarker = e.gocart_marker;
+      // const chargeable = e.chargeable;
+      // const chargerType = e.charger_type;
+      // const tags = e.tags as any[];
+      // const lineColor = "#000000";
+      // const lineWidth = 0.048;
       // const lineHeight = 0
       // FIXME: marker image가 다름
       // FIXME: offset은 상수값인가?

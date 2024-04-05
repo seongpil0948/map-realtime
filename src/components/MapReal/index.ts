@@ -8,7 +8,7 @@ export type { Props } from '../WorkerMap/props'
 export const MapReal = Component
 export const install: Plugin = (app, defaultConfig?: Props) => {
   console.info('installing MapReal', defaultConfig, app, Component)
-  app.component(Component.name, Component)
+  app.component(Component.name!, Component)
   app.component('MapReal', Component)
   injectGlobalConfig(app, defaultConfig)
 }

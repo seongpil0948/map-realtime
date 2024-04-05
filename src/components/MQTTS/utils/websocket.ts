@@ -24,6 +24,7 @@ export const createConnection = async () => {
     path: import.meta.env.VITE_MQTT_PATH,
     reconnectPeriod: 1000,
     transformWsUrl: (url, options, client) => {
+      console.debug(options)
       if (client["connackTimer"]) {
         client.options.password = user.mqttPassword;
         client.options.clientId = user.mqttDeviceId;
@@ -43,7 +44,7 @@ export const createConnection = async () => {
   } catch (e) {
     console.error("error in fetch robots: ", e);
   }
-  let robots = robotsStatusStore.getRobots();
+  // let robots = robotsStatusStore.getRobots();
   mqttClient.on("connect", () => {
     console.debug("connected");
 
@@ -83,7 +84,7 @@ export const createConnection = async () => {
     if (topic.startsWith("rp/colt")) {
       const serviceRobotId = topic.split("/")[4];
       robotsStatusStore.parseMessage(serviceRobotId, message);
-      robots = robotsStatusStore.robots;
+      // robots = robotsStatusStore.robots;
     }
     if (topic.startsWith("rp/ctrl")) {
       if (JSON.parse(message.toString()).robotCntlStateCd === "FAIL") {

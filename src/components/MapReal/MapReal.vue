@@ -2,11 +2,9 @@
 import { onBeforeUnmount, reactive, ref, watch } from "vue";
 import {
   CircleConfig,
-  EvtMouseOut,
   EvtMouseOver,
   LineConfig,
   Resources,
-  StageConfig,
   TWorker,
   TextConfig,
   WorkerDocumentActive,
@@ -14,7 +12,7 @@ import {
 import mockResource from "../../mock/resources";
 import maps from "../../mock/maps";
 import { extractKonva, makeWorker2Line } from "./konva";
-import { Props } from "./props";
+// import { Props } from "./props";
 import {
   getDefaultConfig,
   getMqttConfig,
@@ -34,11 +32,12 @@ import {
 import Konva from "konva";
 import { RectConfig } from "konva/lib/shapes/Rect";
 import { useMqtt } from "./composable/mqtt";
+import { PStageConfig } from "./types";
 
-const props = withDefaults(defineProps<Props>(), {
-  ...getDefaultConfig.props(),
-  canvasStyle: () => getDefaultConfig.props().canvasStyle!,
-});
+// const props = withDefaults(defineProps<Props>(), {
+//   ...getDefaultConfig.props(),
+//   canvasStyle: () => getDefaultConfig.props().canvasStyle!,
+// });
 const emit = defineEmits<MapEvent>();
 
 const stageRef = ref<any>(null);
@@ -72,7 +71,7 @@ const {
     handleWorkerChanged();
   },
 });
-const configKonva: StageConfig = getStageConfig(props, windowSize);
+const configKonva: PStageConfig = getStageConfig(windowSize);
 const configResource = getMqttConfig();
 const topics = topicsByHost(configResource.host);
 const { ignite } = useMqtt<Resources | TWorker, typeof topics>({
@@ -130,10 +129,10 @@ const setInfoText = (message: string) => {
   infoText.value = message;
 };
 
-const handleMouseOut = (event: MouseEvent) => {
+const handleMouseOut = () => {
   setInfoText("Mouseout map");
 };
-const handleMouseMove = (event: MouseEvent) => {
+const handleMouseMove = () => {
   // console.info('Mousemove', event)
   const { stage } = extractKonva(stageRef);
   const mousePos = stage.getPointerPosition();
@@ -183,7 +182,7 @@ const handleMouseOverCircle = (e: EvtMouseOver) => {
   }
 };
 
-const handleMouseOutCircle = (e: EvtMouseOut) => {
+const handleMouseOutCircle = () => {
   // hide tooltip
   tooltipConfig.text = "";
   tootipBgConfig.opacity = 0;
