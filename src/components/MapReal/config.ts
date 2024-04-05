@@ -1,21 +1,26 @@
-import type { App } from 'vue'
-import { inject } from 'vue'
-import type { Props } from '../WorkerMap/props'
-import { IClientOptions } from 'mqtt'
-import type { WidthHeightRef, CircleConfig, TextConfig, LineConfig } from '../../types'
-import { RectConfig } from 'konva/lib/shapes/Rect'
-import { PStageConfig } from './types'
+import type { App } from "vue";
+import { inject } from "vue";
+import type { Props } from "../WorkerMap/props";
+import { IClientOptions } from "mqtt";
+import type {
+  WidthHeightRef,
+  CircleConfig,
+  TextConfig,
+  LineConfig,
+} from "../../types";
+import { RectConfig } from "konva/lib/shapes/Rect";
+import { PStageConfig } from "./types";
 
-const CONFIG_SYMBOL = Symbol('map-real-global-config')
+const CONFIG_SYMBOL = Symbol("map-real-global-config");
 export const injectGlobalConfig = (app: App, config?: Props) => {
-  app.provide(CONFIG_SYMBOL, config)
-}
+  app.provide(CONFIG_SYMBOL, config);
+};
 export const useGlobalConfig = () => {
-  return inject<Props>(CONFIG_SYMBOL, {} as Props)
-}
+  return inject<Props>(CONFIG_SYMBOL, {} as Props);
+};
 
-export const getStageConfig = ( windowSize: WidthHeightRef): PStageConfig => {
-  const { width, height } = windowSize
+export const getStageConfig = (windowSize: WidthHeightRef): PStageConfig => {
+  const { width, height } = windowSize;
   return {
     width: width.value,
     height: height.value,
@@ -24,45 +29,45 @@ export const getStageConfig = ( windowSize: WidthHeightRef): PStageConfig => {
     scaleY: 1,
     // scaleX: mapProps.scale,
     // scaleY: mapProps.scale,
-  }
-}
+  };
+};
 
 export const getMapSize = (windowSize: WidthHeightRef) => {
-  const { width, height } = windowSize
+  const { width, height } = windowSize;
   return {
     width: width.value,
     height: height.value,
     x: 0,
-    y: 0
-  }
-}
+    y: 0,
+  };
+};
 
 export const topicsByHost = (host: string) => {
   switch (host) {
-    case '192.168.0.101':
-      return ["hello", "worker"] as const
+    case "192.168.0.101":
+      return ["location", "worker"] as const;
     default:
-      throw new Error('unknown host')
+      throw new Error("unknown host");
   }
-}
+};
 
 export const getMqttConfig = (): IClientOptions & { host: string } => ({
-
-  clientId: 'client-' + Math.random().toString(16).substring(2, 8),
-  host: '192.168.0.101',
+  clientId: "client-" + Math.random().toString(16).substring(2, 8),
+  host: "192.168.0.101",
   port: 15675,
-  username: 'admin',
-  password: '0525',
-})
+  username: "admin",
+  password: "0525",
+});
 
 export const getDefaultConfig = {
-  props: (): Props => Object.freeze<Props>({
-    canvasStyle: {
-      width: '100%',
-      height: '100%',
-      backgroundColor: '#f0f0f0',
-    },
-  }),
+  props: (): Props =>
+    Object.freeze<Props>({
+      canvasStyle: {
+        width: "100%",
+        height: "100%",
+        backgroundColor: "#f0f0f0",
+      },
+    }),
   circle: (): CircleConfig => ({
     x: 0,
     y: 0,
@@ -93,8 +98,8 @@ export const getDefaultConfig = {
     y: 0,
     width: 0,
     height: 0,
-    fill: 'black',
+    fill: "black",
     opacity: 0,
     cornerRadius: 2,
-  })
-}
+  }),
+};

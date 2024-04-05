@@ -81,18 +81,19 @@ const handleMouseMove = (_event: MouseEvent) => {
   setInfoText(mousePos.x + ", " + mousePos.y);
 };
 
-const topics = Object.freeze(["hello", "worker"] as const);
+const topics = Object.freeze(["location", "worker"] as const);
 const { ignite } = useMqtt<Resources | TWorker, typeof topics>({
   config: {
     clientId: "client-" + Math.random().toString(16).substring(2, 8),
-    host: "192.168.0.101",
+    host: "192.168.0.100",
     port: 15675,
-    username: "admin",
-    password: "0525",
+    username: "root",
+    password: "password",
   },
   topics,
   onMessage(topic, message) {
-    if (topic === "hello") {
+    console.log("in onMessage topic: ", topic, "message: ", message);
+    if (topic === "location") {
       if (isResources(message)) {
         setResources(message);
       } else throw new Error("올바르지 않은 메시지 형식입니다");

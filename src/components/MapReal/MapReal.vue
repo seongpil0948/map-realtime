@@ -79,7 +79,7 @@ const { ignite } = useMqtt<Resources | TWorker, typeof topics>({
   topics,
   onMessage(topic, message) {
     console.log("토픽 `" + topic + "`에서 메시지 수신:", message);
-    if (topic === "hello") {
+    if (topic === "location") {
       if (isResources(message)) setResources(message);
       else throw new Error("올바르지 않은 메시지 형식입니다");
     } else if (topic === "worker") {

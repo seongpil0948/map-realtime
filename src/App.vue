@@ -2,8 +2,8 @@
 
 <template>
   <div>
-    <!-- <WorkerMap /> -->
-    <MqTts />
+    <WorkerMap />
+    <!-- <MqTts /> -->
     <!-- <map-real /> -->
   </div>
 </template>
