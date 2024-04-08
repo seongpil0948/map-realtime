@@ -1,10 +1,10 @@
 import { Ref } from "vue";
-import { Node, Stage, TextConfig} from "../../../types";
+import { Node, Stage, TextConfig } from "../../../types";
 import factory from "./factory";
 
 const isValidStage = (stage: any) => {
   // TODO(임규리): 무조건 stageRef만 들어올 수 있도록
-  if(stage){
+  if (stage) {
     return true;
   }
 };
@@ -59,8 +59,7 @@ export function generateObjectLabel({
   const node = konvaEl.getNode() as Node;
   const stage = extractStage(stageRef);
   const rect = node.getClientRect({ relativeTo: stage });
-  console.log("node: ", node);
-  console.log("rect: ", rect);
+  // console.log("node: ", node, "rect: ", rect);
 
   const tConfig: TextConfig = {
     ...factory.konva.text(),

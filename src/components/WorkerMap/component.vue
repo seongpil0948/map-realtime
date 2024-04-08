@@ -2,7 +2,7 @@
 import useKonva from "./composables/konva";
 import useMap from "./composables/map";
 import { Resources, TWorker, TextConfig } from "../../types";
-import { computed, onBeforeUnmount, ref } from "vue";
+import { nextTick, onBeforeUnmount, ref } from "vue";
 import { useMqtt } from "./composables/mqtt";
 import factory from "./utils/factory";
 import { isResources, isWorker } from "./utils/map";
@@ -11,6 +11,53 @@ import { generateObjectLabel } from "./utils/konva";
 
 const { stageConfig, stageRef, getStage } = useKonva();
 const { mapAll, mapId, mapImage, mTool } = useMap({});
+
+const resourceLabels = ref<TextConfig[]>([]);
+const updateLabels = () => {
+  nextTick(() => {
+    const texts: TextConfig[] = [];
+    workerGroupRef.value.forEach((worker) => {
+      const tConfig = generateObjectLabel({
+        konvaEl: worker,
+        stageRef,
+        place: "top",
+        text: (node) => node.attrs.name,
+        textConfig: {
+          fill: "red",
+          fontSize: 12,
+          fontStyle: "bold",
+        },
+      });
+      texts.push(tConfig);
+    });
+    markerGroupRef.value.forEach((marker) => {
+      const tConfig = generateObjectLabel({
+        konvaEl: marker,
+        stageRef,
+        place: "bottom",
+        text: (node) => node.attrs.name,
+        textConfig: {
+          offsetX: 20,
+        },
+      });
+      texts.push(tConfig);
+    });
+    zoneGroupRef.value.forEach((zone) => {
+      const tConfig = generateObjectLabel({
+        konvaEl: zone,
+        stageRef,
+        place: "center",
+        text: (node) => node.attrs.name,
+        textConfig: {
+          offsetX: 20,
+        },
+      });
+      texts.push(tConfig);
+    });
+    console.log("update resource label texts: ", texts);
+    resourceLabels.value = texts;
+  });
+};
 const {
   pathPlanLocal,
   pathPlanGlobalCircle,
@@ -21,53 +68,10 @@ const {
   zoneLineConfigs,
   setResources,
   handleUpdateWorker,
-} = useResources({ mTool });
+} = useResources({ mTool, onUpdateResources: updateLabels });
 const workerGroupRef = ref<unknown[]>([]);
 const markerGroupRef = ref<unknown[]>([]);
 const zoneGroupRef = ref<unknown[]>([]);
-const resourceLabels = computed(() => {
-  const texts: TextConfig[] = [];
-  workerGroupRef.value.forEach((worker) => {
-    const tConfig = generateObjectLabel({
-      konvaEl: worker,
-      stageRef,
-      place: "top",
-      text: (node) => node.attrs.name,
-      textConfig: {
-        fill: "red",
-        fontSize: 12,
-        fontStyle: "bold",
-      },
-    });
-    texts.push(tConfig);
-  });
-  markerGroupRef.value.forEach((marker) => {
-    const tConfig = generateObjectLabel({
-      konvaEl: marker,
-      stageRef,
-      place: "bottom",
-      text: (node) => node.attrs.name,
-      textConfig: {
-        offsetX: 20,
-      },
-    });
-    texts.push(tConfig);
-  });
-  zoneGroupRef.value.forEach((zone) => {
-    const tConfig = generateObjectLabel({
-      konvaEl: zone,
-      stageRef,
-      place: "center",
-      text: (node) => node.attrs.name,
-      textConfig: {
-        offsetX: 20,
-      },
-    });
-    texts.push(tConfig);
-  });
-  console.log("texts: ", texts);
-  return texts;
-});
 
 const infoText = ref<string>("");
 const setInfoText = (message: string) => {
@@ -100,6 +104,7 @@ const { ignite } = useMqtt<Resources | TWorker, typeof topics>({
     } else if (topic === "worker") {
       if (isWorker(message)) {
         handleUpdateWorker(message.document);
+        updateLabels();
       } else throw new Error("올바르지 않은 메시지 형식입니다");
     }
   },
