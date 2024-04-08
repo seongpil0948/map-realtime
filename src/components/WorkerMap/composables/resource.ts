@@ -191,7 +191,7 @@ export default function (props: Props) {
         x: pose.x,
         y: pose.y,
         rotation: MapTools.thetaToDegree(pose.theta),
-        width: 20,
+        width: 15,
         height: 20,
         offset: {
           x: 12,

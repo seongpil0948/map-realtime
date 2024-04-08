@@ -13,7 +13,7 @@ export const STATIC_IMG_DICT = Object.freeze({
   "ZoneProhibit": "zone_prohibit.svg",
   "ZonePreferred": "zone_preferred.svg",
   "ZoneUnPreferred": "zone_unpreferred.svg",
-  "Location": "location.svg",
+  "Location": "marker.png",
 });
 export type ImgKeys = keyof typeof STATIC_IMG_DICT;
 
