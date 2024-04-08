@@ -139,6 +139,7 @@ export default function (props: Props) {
   };
 
   const updateWorker = (worker: ImageConfig) => {
+    workerImgConfigs.value = []
     const idx = workerImgConfigs.value.findIndex((w) => w.id === worker.id);
     if (idx === -1) {
       workerImgConfigs.value.push(worker);
@@ -168,8 +169,15 @@ export default function (props: Props) {
 
     if (!data) throw new Error("data is not exist");
 
-    updatePathPlan(rawData, mTool.value);
-    updateWorker(data);
+    // updatePathPlan(rawData, mTool.value);
+    // updateWorker(data);
+
+    const promises = [
+      updatePathPlan(rawData, mTool.value),
+      updateWorker(data),
+    ];
+  
+    await Promise.all(promises);
   };
 
   // ================================= location ===============================
