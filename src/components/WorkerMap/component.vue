@@ -67,7 +67,6 @@ const updateLabels = () => {
         });
         texts.push(tConfig)
       })
-    console.log("update resource label texts: ", texts);
     resourceLabels.value = texts;
   });
 };
