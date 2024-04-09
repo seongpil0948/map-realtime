@@ -188,22 +188,23 @@ export default function (props: Props) {
     mTool: MapTools
   ) => {
     locationImgConfigs.value = [];
-    const image = staticImgs["Location"];
+    const image = staticImgs["marker"];
 
     for (let idx = 0; idx < data.Location.length; idx++) {
       const e = data.Location[idx];
       const pose = mTool.transformPoseM2PX(e.pose);
       locationImgConfigs.value.push({
         id: e.id,
+        name: e.name,
         image,
         x: pose.x,
         y: pose.y,
         rotation: MapTools.thetaToDegree(pose.theta),
-        width: 15,
-        height: 20,
+        width: 25,
+        height: 25,
         offset: {
-          x: 12,
-          y: 12,
+          x: 16,
+          y: 16,
         },
       });
     }
@@ -248,11 +249,11 @@ export default function (props: Props) {
         image,
         x: pose.x,
         y: pose.y,
-        width: 20,
-        height: 20,
+        width: 25,
+        height: 25,
         offset: {
-          x: 10,
-          y: 10,
+          x: 16,
+          y: 16,
         },
         // fill: 'violet',
       });
@@ -283,6 +284,7 @@ export default function (props: Props) {
       stroke: "#333333",
       strokeScaleEnabled: false,
       fillPatternRepeat: "repeat",
+      offsetY: 10
     };
 
     switch (zoneType) {

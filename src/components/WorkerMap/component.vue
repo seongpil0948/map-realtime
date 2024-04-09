@@ -54,6 +54,19 @@ const updateLabels = () => {
       });
       texts.push(tConfig);
     });
+    locationGroupRef.value.forEach((location) => {
+        const tConfig = generateObjectLabel({
+          konvaEl: location,
+          stageRef,
+          place: "bottom",
+          text: (node) => node.attrs.name,
+          textConfig: {
+            offsetX: 20,
+            offsetY: 15,
+          },
+        });
+        texts.push(tConfig)
+      })
     console.log("update resource label texts: ", texts);
     resourceLabels.value = texts;
   });
@@ -72,6 +85,7 @@ const {
 const workerGroupRef = ref<unknown[]>([]);
 const markerGroupRef = ref<unknown[]>([]);
 const zoneGroupRef = ref<unknown[]>([]);
+const locationGroupRef = ref<unknown[]>([]);
 
 const infoText = ref<string>("");
 const setInfoText = (message: string) => {
@@ -141,6 +155,7 @@ onBeforeUnmount(() => {
           :config="markerImgConfig"
         />
         <v-image
+          ref="locationGroupRef"
           v-for="locationImgConfig in locationImgConfigs"
           :key="locationImgConfig.id"
           :config="locationImgConfig"
